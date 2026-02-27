@@ -17,6 +17,12 @@ This toolkit is intended **solely for authorized security testing, academic rese
 - The authors assume no liability for misuse of this software
 - All testing should comply with applicable laws, regulations, and the target model provider's terms of service
 
+### Screenshots
+
+| Dashboard | Templates | Test Runner |
+|:---------:|:---------:|:-----------:|
+| ![Dashboard](docs/screenshot-dashboard.png) | ![Templates](docs/screenshot-templates.png) | ![Runner](docs/screenshot-runner.png) |
+
 ### Features
 
 - **96 attack templates** across 5 categories (EN / ZH / JA)
@@ -24,6 +30,7 @@ This toolkit is intended **solely for authorized security testing, academic rese
 - **Result tracking** with manual verdict (Pass / Fail / Pending)
 - **Markdown report export** with per-category breakdown
 - **Trilingual UI** (English, Traditional Chinese, Japanese) with localStorage persistence
+- **OpenAI-compatible API** support for testing self-hosted LLMs (Ollama, vLLM, LM Studio)
 
 ### Tech Stack
 
@@ -123,6 +130,12 @@ LLM 對抗性安全測試工具，系統化評估語言模型的安全性。支�
 - 作者不對本軟體的任何濫用行為負責
 - 所有測試應遵守相關法律法規及目標模型供應商的服務條款
 
+### 截圖
+
+| 儀表板 | 攻擊模板 | 測試執行器 |
+|:------:|:-------:|:---------:|
+| ![Dashboard](docs/screenshot-dashboard.png) | ![Templates](docs/screenshot-templates.png) | ![Runner](docs/screenshot-runner.png) |
+
 ### 功能
 
 - **96 個攻擊模板**，涵蓋 5 大類別（英文 / 中文 / 日文）
@@ -130,6 +143,7 @@ LLM 對抗性安全測試工具，系統化評估語言模型的安全性。支�
 - **結果追蹤**，手動判定（通過 / 攔截 / 待審查）
 - **Markdown 報告匯出**，依類別分項統計
 - **三語 UI**（英文、正體中文、日文），語言偏好以 localStorage 持久化
+- **OpenAI-Compatible API** 支援測試自架 LLM（Ollama、vLLM、LM Studio）
 
 ### 技術架構
 
@@ -187,6 +201,12 @@ LLM の安全性を体系的に評価するための敵対的テストツール�
 - 著者は本ソフトウェアの悪用に対する責任を負わない
 - すべてのテストは関連法規および対象モデル提供者の利用規約に準拠すること
 
+### スクリーンショット
+
+| ダッシュボード | テンプレート | テストランナー |
+|:------------:|:----------:|:------------:|
+| ![Dashboard](docs/screenshot-dashboard.png) | ![Templates](docs/screenshot-templates.png) | ![Runner](docs/screenshot-runner.png) |
+
 ### 機能
 
 - **96 の攻撃テンプレート**、5 カテゴリ（英語 / 中国語 / 日本語）
@@ -194,6 +214,7 @@ LLM の安全性を体系的に評価するための敵対的テストツール�
 - **結果追跡** - 手動判定（Pass / Fail / 未判定）
 - **Markdown レポート出力** - カテゴリ別の内訳
 - **3 言語 UI**（英語、繁体字中国語、日本語）、localStorage で言語設定を保持
+- **OpenAI 互換 API** - セルフホスト LLM のテスト対応 (Ollama、vLLM、LM Studio)
 
 ### 技術スタック
 
