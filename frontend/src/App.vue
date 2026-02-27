@@ -1,11 +1,9 @@
 <script setup lang="ts">
 import { computed } from 'vue'
-import { useRouter } from 'vue-router'
 import Toast from 'primevue/toast'
 import ConfirmDialog from 'primevue/confirmdialog'
 import { useI18n, type Locale } from './composables/useI18n'
 
-const router = useRouter()
 const { t, locale, setLocale } = useI18n()
 
 const navItems = computed(() => [

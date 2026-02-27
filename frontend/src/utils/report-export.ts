@@ -16,7 +16,7 @@ export function generateReport(results: TestRun[], t: TranslateFn): string {
   const categoryGroups: Record<string, TestRun[]> = {}
   for (const r of results) {
     if (!categoryGroups[r.category]) categoryGroups[r.category] = []
-    categoryGroups[r.category].push(r)
+    categoryGroups[r.category]!.push(r)
   }
 
   let md = `# ${t('export.title')}\n\n`
