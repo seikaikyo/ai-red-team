@@ -1,6 +1,8 @@
 import type { TestRun } from '../composables/useTestRunner'
 
-export function generateReport(results: TestRun[]): string {
+type TranslateFn = (key: string, params?: Record<string, string | number>) => string
+
+export function generateReport(results: TestRun[], t: TranslateFn): string {
   if (!results.length) return ''
 
   const now = new Date().toISOString().slice(0, 10)
@@ -17,45 +19,45 @@ export function generateReport(results: TestRun[]): string {
     categoryGroups[r.category].push(r)
   }
 
-  let md = `# AI Red Team Report\n\n`
-  md += `**Date:** ${now}\n`
-  md += `**Target Model(s):** ${models.join(', ')}\n`
-  md += `**Total Tests:** ${total}\n\n`
+  let md = `# ${t('export.title')}\n\n`
+  md += `**${t('export.date')}:** ${now}\n`
+  md += `**${t('export.targetModels')}:** ${models.join(', ')}\n`
+  md += `**${t('export.totalTests')}:** ${total}\n\n`
 
-  md += `## Summary\n\n`
-  md += `| Metric | Count |\n`
+  md += `## ${t('export.summary')}\n\n`
+  md += `| ${t('export.metric')} | ${t('export.count')} |\n`
   md += `|--------|-------|\n`
-  md += `| Attack Success (Exploited) | ${pass} |\n`
-  md += `| Blocked by Model | ${fail} |\n`
-  md += `| Pending Review | ${pending} |\n`
-  md += `| **Success Rate** | **${rate}%** |\n\n`
+  md += `| ${t('export.attackSuccess')} | ${pass} |\n`
+  md += `| ${t('export.blockedByModel')} | ${fail} |\n`
+  md += `| ${t('export.pendingReview')} | ${pending} |\n`
+  md += `| **${t('export.successRate')}** | **${rate}%** |\n\n`
 
   for (const [cat, items] of Object.entries(categoryGroups)) {
     const catPass = items.filter(r => r.success === true).length
-    md += `## ${cat} (${catPass}/${items.length} exploited)\n\n`
+    md += `## ${cat} (${catPass}/${items.length} ${t('export.exploited')})\n\n`
 
     for (const item of items) {
-      const verdict = item.success === true ? 'PASS' : item.success === false ? 'FAIL' : 'PENDING'
+      const verdict = item.success === true ? t('export.pass') : item.success === false ? t('export.fail') : t('export.pending')
       md += `### ${item.template_name} [${verdict}]\n\n`
-      md += `- **Model:** ${item.model}\n`
-      md += `- **Duration:** ${item.duration_ms}ms\n`
-      md += `- **Severity:** ${item.severity}\n\n`
-      md += `**Prompt:**\n\`\`\`\n${item.prompt_sent}\n\`\`\`\n\n`
-      md += `**Response:**\n\`\`\`\n${item.response}\n\`\`\`\n\n`
+      md += `- **${t('export.model')}:** ${item.model}\n`
+      md += `- **${t('export.duration')}:** ${item.duration_ms}ms\n`
+      md += `- **${t('export.severity')}:** ${item.severity}\n\n`
+      md += `**${t('export.prompt')}:**\n\`\`\`\n${item.prompt_sent}\n\`\`\`\n\n`
+      md += `**${t('export.response')}:**\n\`\`\`\n${item.response}\n\`\`\`\n\n`
       md += `---\n\n`
     }
   }
 
-  md += `## Recommendations\n\n`
+  md += `## ${t('export.recommendations')}\n\n`
   if (pass > 0) {
-    md += `- ${pass} attack(s) successfully bypassed model safety measures\n`
-    md += `- Review exploited categories and strengthen corresponding guardrails\n`
+    md += `- ${t('export.recBypassed', { count: pass })}\n`
+    md += `- ${t('export.recReview')}\n`
   }
   if (fail > 0) {
-    md += `- ${fail} attack(s) were properly blocked\n`
+    md += `- ${t('export.recBlocked', { count: fail })}\n`
   }
   if (pending > 0) {
-    md += `- ${pending} result(s) still need manual review\n`
+    md += `- ${t('export.recPending', { count: pending })}\n`
   }
 
   return md
