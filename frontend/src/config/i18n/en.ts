@@ -62,6 +62,12 @@ export default {
   'runner.response': 'Response',
   'runner.runToSee': 'Run a test to see the response',
   'runner.testCompleted': 'Test completed',
+  'runner.useCustomModel': 'Custom Model (Ollama, vLLM, etc.)',
+  'runner.provider': 'Provider',
+  'runner.baseUrl': 'Base URL',
+  'runner.modelName': 'Model Name',
+  'runner.modelNamePlaceholder': 'e.g. mistral, llama3, qwen2',
+  'runner.modelNameRequired': 'Please enter a model name',
 
   // Results
   'results.title': 'Test Results',

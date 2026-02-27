@@ -62,6 +62,12 @@ export default {
   'runner.response': '回應',
   'runner.runToSee': '執行測試以查看回應',
   'runner.testCompleted': '測試完成',
+  'runner.useCustomModel': '自訂模型 (Ollama, vLLM 等)',
+  'runner.provider': '服務提供者',
+  'runner.baseUrl': 'Base URL',
+  'runner.modelName': '模型名稱',
+  'runner.modelNamePlaceholder': '例如 mistral, llama3, qwen2',
+  'runner.modelNameRequired': '請輸入模型名稱',
 
   // Results
   'results.title': '測試結果',

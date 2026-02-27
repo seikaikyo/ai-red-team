@@ -22,6 +22,7 @@ export interface RunRequest {
   variables: Record<string, string>
   max_tokens: number
   temperature: number
+  base_url?: string | null
 }
 
 export function useTestRunner() {
