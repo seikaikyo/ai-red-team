@@ -1,12 +1,14 @@
 # AI Red Team Toolkit
 
-[English](#english) | [正體中文](#正體中文) | [日本語](#日本語)
+**[Live Demo](https://ai-red-team.dashai.dev)** | [English](#english) | [正體中文](#正體中文) | [日本語](#日本語)
 
 ---
 
 ## English
 
 LLM adversarial testing toolkit for systematically evaluating language model safety. Supports prompt injection, jailbreak, bias detection, safety bypass, and multilingual attack vectors.
+
+> **Live Demo:** https://ai-red-team.dashai.dev (UI browsing only — API key not included, test execution disabled)
 
 ### Disclaimer
 
@@ -121,6 +123,8 @@ ai-red-team/
 
 LLM 對抗性安全測試工具，系統化評估語言模型的安全性。支援提示注入、越獄攻擊、偏見檢測、安全繞過及多語言攻擊向量。
 
+> **線上展示：** https://ai-red-team.dashai.dev（僅供瀏覽 UI，未設定 API Key，無法執行測試）
+
 ### 免責聲明
 
 本工具**僅供授權安全測試、學術研究及防禦性 AI 安全評估使用**。內建的攻擊模板旨在識別 LLM 安全機制的漏洞，以便加以強化。
@@ -191,6 +195,8 @@ npm run dev -- --port 5174
 ## 日本語
 
 LLM の安全性を体系的に評価するための敵対的テストツールキット。Prompt Injection、Jailbreak、Bias検出、Safety Bypass、多言語攻撃ベクトルに対応。
+
+> **Live Demo:** https://ai-red-team.dashai.dev（UI 閲覧のみ。API Key 未設定のため、テスト実行は不可）
 
 ### 免責事項
 
