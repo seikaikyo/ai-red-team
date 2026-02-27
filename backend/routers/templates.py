@@ -13,6 +13,7 @@ router = APIRouter(prefix="/api/templates", tags=["templates"])
 def list_templates(
     category: str | None = None,
     severity: str | None = None,
+    language: str | None = None,
     q: str | None = None,
     page: int = Query(1, ge=1),
     limit: int = Query(50, ge=1, le=100),
@@ -23,6 +24,8 @@ def list_templates(
         stmt = stmt.where(AttackTemplate.category == category)
     if severity:
         stmt = stmt.where(AttackTemplate.severity == severity)
+    if language:
+        stmt = stmt.where(AttackTemplate.language == language)
     if q:
         stmt = stmt.where(AttackTemplate.name.contains(q))
     stmt = stmt.order_by(AttackTemplate.created_at.desc())

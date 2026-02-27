@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, computed, onMounted } from 'vue'
+import { ref, computed, onMounted, watch } from 'vue'
 import { useToast } from 'primevue/usetoast'
 import { useConfirm } from 'primevue/useconfirm'
 import DataTable from 'primevue/datatable'
@@ -16,12 +16,18 @@ import { useI18n } from '../composables/useI18n'
 
 const toast = useToast()
 const confirm = useConfirm()
-const { t } = useI18n()
+const { t, locale } = useI18n()
 const { templates, loading, fetchTemplates, createTemplate, updateTemplate, deleteTemplate } = useTemplates()
 
+const langFilter = ref<string | null>(null)
 const dialogVisible = ref(false)
 const editingId = ref<string | null>(null)
 const saving = ref(false)
+
+const langOptions = computed(() => [
+  { value: null, label: t('runner.allCategories') },
+  ...LANGUAGES.map(l => ({ value: l.value, label: l.label })),
+])
 
 const emptyForm = (): TemplateForm => ({
   name: '',
@@ -32,7 +38,7 @@ const emptyForm = (): TemplateForm => ({
   variables: [],
   expected_behavior: '',
   tags: [],
-  language: 'en',
+  language: locale.value,
 })
 
 const form = ref<TemplateForm>(emptyForm())
@@ -85,7 +91,7 @@ async function save() {
       toast.add({ severity: 'success', summary: t('common.created'), life: 2000 })
     }
     dialogVisible.value = false
-    await fetchTemplates()
+    await loadTemplates()
   } catch (e: any) {
     toast.add({ severity: 'error', summary: t('common.error'), detail: e.message, life: 3000 })
   } finally {
@@ -101,7 +107,7 @@ function confirmDelete(template: any) {
     accept: async () => {
       await deleteTemplate(template.id)
       toast.add({ severity: 'info', summary: t('common.deleted'), life: 2000 })
-      await fetchTemplates()
+      await loadTemplates()
     },
   })
 }
@@ -111,7 +117,13 @@ function severityColor(severity: string) {
   return s?.value === 'low' ? 'success' : s?.value === 'medium' ? 'warn' : s?.value === 'high' ? 'warn' : 'danger'
 }
 
-onMounted(() => fetchTemplates())
+function loadTemplates() {
+  const lang = langFilter.value ?? locale.value
+  fetchTemplates({ language: lang })
+}
+
+watch([locale, langFilter], () => loadTemplates())
+onMounted(() => loadTemplates())
 </script>
 
 <template>
@@ -121,7 +133,17 @@ onMounted(() => fetchTemplates())
         <h2>{{ t('templates.title') }}</h2>
         <p>{{ t('templates.subtitle') }}</p>
       </div>
-      <Button :label="t('templates.newBtn')" icon="pi pi-plus" @click="openNew" />
+      <div style="display: flex; align-items: center; gap: 8px">
+        <Select
+          v-model="langFilter"
+          :options="langOptions"
+          optionLabel="label"
+          optionValue="value"
+          style="width: 160px"
+          :placeholder="t('templates.lang')"
+        />
+        <Button :label="t('templates.newBtn')" icon="pi pi-plus" @click="openNew" />
+      </div>
     </div>
   </div>
 
