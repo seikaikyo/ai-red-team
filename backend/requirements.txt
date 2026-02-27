@@ -3,4 +3,5 @@ uvicorn[standard]
 sqlmodel
 pydantic-settings
 anthropic
+openai
 python-dotenv

@@ -80,6 +80,7 @@ class TestRunCreate(SQLModel):
     variables: dict[str, str] = {}
     max_tokens: int = 1024
     temperature: float = 1.0
+    base_url: str | None = None
 
 
 class TestRunUpdateVerdict(SQLModel):

@@ -44,6 +44,7 @@ def run_single_test(body: TestRunCreate, session: Session = Depends(get_session)
             model=body.model,
             max_tokens=body.max_tokens,
             temperature=body.temperature,
+            base_url=body.base_url,
         )
     except ValueError as e:
         raise HTTPException(status_code=400, detail=str(e))

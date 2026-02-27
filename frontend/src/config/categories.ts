@@ -21,10 +21,19 @@ export const LANGUAGES = [
 ] as const
 
 export const MODELS = [
-  { value: 'claude-sonnet-4-20250514', label: 'Claude Sonnet 4' },
-  { value: 'claude-haiku-4-5-20251001', label: 'Claude Haiku 4.5' },
-  { value: 'claude-opus-4-20250514', label: 'Claude Opus 4' },
+  { value: 'claude-sonnet-4-20250514', label: 'Claude Sonnet 4', provider: 'anthropic' as const },
+  { value: 'claude-haiku-4-5-20251001', label: 'Claude Haiku 4.5', provider: 'anthropic' as const },
+  { value: 'claude-opus-4-20250514', label: 'Claude Opus 4', provider: 'anthropic' as const },
 ] as const
+
+export const CUSTOM_PROVIDER_PRESETS = [
+  { value: 'ollama', label: 'Ollama', defaultUrl: 'http://localhost:11434/v1' },
+  { value: 'vllm', label: 'vLLM', defaultUrl: 'http://localhost:8000/v1' },
+  { value: 'lmstudio', label: 'LM Studio', defaultUrl: 'http://localhost:1234/v1' },
+  { value: 'custom', label: 'Custom', defaultUrl: '' },
+] as const
+
+export type ProviderPreset = typeof CUSTOM_PROVIDER_PRESETS[number]['value']
 
 export type Category = typeof CATEGORIES[number]['value']
 export type Severity = typeof SEVERITIES[number]['value']

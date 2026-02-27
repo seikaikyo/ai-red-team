@@ -2,14 +2,16 @@
 import { ref, computed, onMounted, watch } from 'vue'
 import { useToast } from 'primevue/usetoast'
 import Select from 'primevue/select'
+import SelectButton from 'primevue/selectbutton'
 import InputText from 'primevue/inputtext'
 import Button from 'primevue/button'
 import Textarea from 'primevue/textarea'
 import InputNumber from 'primevue/inputnumber'
 import Tag from 'primevue/tag'
+import ToggleSwitch from 'primevue/toggleswitch'
 import { useTemplates, type AttackTemplate } from '../composables/useTemplates'
 import { useTestRunner, type TestRun } from '../composables/useTestRunner'
-import { MODELS, CATEGORIES } from '../config/categories'
+import { MODELS, CATEGORIES, CUSTOM_PROVIDER_PRESETS, type ProviderPreset } from '../config/categories'
 import { useI18n } from '../composables/useI18n'
 
 const toast = useToast()
@@ -24,6 +26,21 @@ const temperature = ref(1.0)
 const variables = ref<Record<string, string>>({})
 const lastResult = ref<TestRun | null>(null)
 const categoryFilter = ref<string | null>(null)
+
+// 自訂模型
+const useCustomModel = ref(false)
+const customProvider = ref<ProviderPreset>('ollama')
+const customBaseUrl = ref<string>(CUSTOM_PROVIDER_PRESETS[0].defaultUrl)
+const customModelName = ref('')
+
+const providerOptions = CUSTOM_PROVIDER_PRESETS.map(p => ({ label: p.label, value: p.value }))
+
+watch(customProvider, (val) => {
+  const preset = CUSTOM_PROVIDER_PRESETS.find(p => p.value === val)
+  if (preset && preset.defaultUrl) {
+    customBaseUrl.value = preset.defaultUrl
+  }
+})
 
 const i18nCategories = computed(() =>
   CATEGORIES.map(c => ({ ...c, label: t(c.labelKey) }))
@@ -51,15 +68,28 @@ const resolvedPrompt = computed(() => {
   return prompt
 })
 
+const effectiveModel = computed(() =>
+  useCustomModel.value ? customModelName.value : selectedModel.value
+)
+
+const effectiveBaseUrl = computed(() =>
+  useCustomModel.value ? customBaseUrl.value : null
+)
+
 async function execute() {
   if (!selectedTemplate.value) return
+  if (useCustomModel.value && !customModelName.value.trim()) {
+    toast.add({ severity: 'warn', summary: t('common.error'), detail: t('runner.modelNameRequired'), life: 3000 })
+    return
+  }
   try {
     lastResult.value = await runTest({
       template_id: selectedTemplate.value.id,
-      model: selectedModel.value,
+      model: effectiveModel.value,
       variables: variables.value,
       max_tokens: maxTokens.value,
       temperature: temperature.value,
+      base_url: effectiveBaseUrl.value,
     })
     toast.add({ severity: 'success', summary: t('runner.testCompleted'), detail: `${lastResult.value.duration_ms}ms`, life: 3000 })
   } catch (e: any) {
@@ -106,7 +136,25 @@ onMounted(() => fetchTemplates())
           </div>
           <div>
             <label style="display: block; font-size: 0.8rem; font-weight: 600; margin-bottom: 4px">{{ t('runner.targetModel') }}</label>
-            <Select v-model="selectedModel" :options="[...MODELS]" optionLabel="label" optionValue="value" style="width: 100%" />
+            <Select v-if="!useCustomModel" v-model="selectedModel" :options="[...MODELS]" optionLabel="label" optionValue="value" style="width: 100%" />
+            <div style="display: flex; align-items: center; gap: 8px; margin-top: 8px">
+              <ToggleSwitch v-model="useCustomModel" />
+              <span style="font-size: 0.8rem; color: #64748b">{{ t('runner.useCustomModel') }}</span>
+            </div>
+          </div>
+          <div v-if="useCustomModel" style="display: flex; flex-direction: column; gap: 10px; padding: 12px; background: #f8fafc; border-radius: 8px; border: 1px solid #e2e8f0">
+            <div>
+              <label style="display: block; font-size: 0.8rem; font-weight: 600; margin-bottom: 4px">{{ t('runner.provider') }}</label>
+              <SelectButton v-model="customProvider" :options="providerOptions" optionLabel="label" optionValue="value" :allowEmpty="false" style="width: 100%" />
+            </div>
+            <div>
+              <label style="display: block; font-size: 0.8rem; font-weight: 600; margin-bottom: 4px">{{ t('runner.baseUrl') }}</label>
+              <InputText v-model="customBaseUrl" style="width: 100%" placeholder="http://localhost:11434/v1" />
+            </div>
+            <div>
+              <label style="display: block; font-size: 0.8rem; font-weight: 600; margin-bottom: 4px">{{ t('runner.modelName') }}</label>
+              <InputText v-model="customModelName" style="width: 100%" :placeholder="t('runner.modelNamePlaceholder')" />
+            </div>
           </div>
           <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px">
             <div>

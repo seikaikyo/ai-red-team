@@ -62,6 +62,12 @@ export default {
   'runner.response': 'Response',
   'runner.runToSee': 'Testを実行してResponseを確認',
   'runner.testCompleted': 'Test完了',
+  'runner.useCustomModel': 'Custom Model (Ollama, vLLM 等)',
+  'runner.provider': 'Provider',
+  'runner.baseUrl': 'Base URL',
+  'runner.modelName': 'Model名',
+  'runner.modelNamePlaceholder': '例: mistral, llama3, qwen2',
+  'runner.modelNameRequired': 'Model名を入力してください',
 
   // Results
   'results.title': 'Test結果',
