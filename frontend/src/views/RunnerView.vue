@@ -11,11 +11,11 @@ import Tag from 'primevue/tag'
 import ToggleSwitch from 'primevue/toggleswitch'
 import { useTemplates, type AttackTemplate } from '../composables/useTemplates'
 import { useTestRunner, type TestRun } from '../composables/useTestRunner'
-import { MODELS, CATEGORIES, CUSTOM_PROVIDER_PRESETS, type ProviderPreset } from '../config/categories'
+import { MODELS, CATEGORIES, LANGUAGES, CUSTOM_PROVIDER_PRESETS, type ProviderPreset } from '../config/categories'
 import { useI18n } from '../composables/useI18n'
 
 const toast = useToast()
-const { t } = useI18n()
+const { t, locale } = useI18n()
 const { templates, fetchTemplates } = useTemplates()
 const { running, runTest } = useTestRunner()
 
@@ -26,6 +26,7 @@ const temperature = ref(1.0)
 const variables = ref<Record<string, string>>({})
 const lastResult = ref<TestRun | null>(null)
 const categoryFilter = ref<string | null>(null)
+const langFilter = ref<string | null>(null)
 
 // 自訂模型
 const useCustomModel = ref(false)
@@ -46,9 +47,17 @@ const i18nCategories = computed(() =>
   CATEGORIES.map(c => ({ ...c, label: t(c.labelKey) }))
 )
 
+const langOptions = computed(() => [
+  { value: null, label: t('runner.allCategories') },
+  ...LANGUAGES.map(l => ({ value: l.value, label: l.label })),
+])
+
 const filteredTemplates = computed(() => {
-  if (!categoryFilter.value) return templates.value
-  return templates.value.filter(t => t.category === categoryFilter.value)
+  let list = templates.value
+  if (categoryFilter.value) {
+    list = list.filter(t => t.category === categoryFilter.value)
+  }
+  return list
 })
 
 watch(selectedTemplate, (t) => {
@@ -97,7 +106,16 @@ async function execute() {
   }
 }
 
-onMounted(() => fetchTemplates())
+function loadTemplates() {
+  const lang = langFilter.value ?? locale.value
+  fetchTemplates({ language: lang })
+}
+
+watch([locale, langFilter], () => {
+  selectedTemplate.value = null
+  loadTemplates()
+})
+onMounted(() => loadTemplates())
 </script>
 
 <template>
@@ -112,16 +130,28 @@ onMounted(() => fetchTemplates())
       <div class="stat-card">
         <div style="font-weight: 600; margin-bottom: 12px">{{ t('runner.config') }}</div>
         <div style="display: flex; flex-direction: column; gap: 12px">
-          <div>
-            <label style="display: block; font-size: 0.8rem; font-weight: 600; margin-bottom: 4px">{{ t('runner.categoryFilter') }}</label>
-            <Select
-              v-model="categoryFilter"
-              :options="[{ value: null, label: t('runner.allCategories') }, ...i18nCategories]"
-              optionLabel="label"
-              optionValue="value"
-              style="width: 100%"
-              showClear
-            />
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px">
+            <div>
+              <label style="display: block; font-size: 0.8rem; font-weight: 600; margin-bottom: 4px">{{ t('runner.categoryFilter') }}</label>
+              <Select
+                v-model="categoryFilter"
+                :options="[{ value: null, label: t('runner.allCategories') }, ...i18nCategories]"
+                optionLabel="label"
+                optionValue="value"
+                style="width: 100%"
+                showClear
+              />
+            </div>
+            <div>
+              <label style="display: block; font-size: 0.8rem; font-weight: 600; margin-bottom: 4px">{{ t('templates.lang') }}</label>
+              <Select
+                v-model="langFilter"
+                :options="langOptions"
+                optionLabel="label"
+                optionValue="value"
+                style="width: 100%"
+              />
+            </div>
           </div>
           <div>
             <label style="display: block; font-size: 0.8rem; font-weight: 600; margin-bottom: 4px">{{ t('runner.template') }}</label>

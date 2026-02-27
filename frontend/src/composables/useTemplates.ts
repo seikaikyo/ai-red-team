@@ -32,12 +32,13 @@ export function useTemplates() {
   const templates = ref<AttackTemplate[]>([])
   const loading = ref(false)
 
-  async function fetchTemplates(params?: { category?: string; severity?: string; q?: string }) {
+  async function fetchTemplates(params?: { category?: string; severity?: string; language?: string; q?: string }) {
     loading.value = true
     try {
       const query = new URLSearchParams()
       if (params?.category) query.set('category', params.category)
       if (params?.severity) query.set('severity', params.severity)
+      if (params?.language) query.set('language', params.language)
       if (params?.q) query.set('q', params.q)
       const qs = query.toString()
       const res = await fetch(`${API_BASE}/api/templates${qs ? '?' + qs : ''}`)
