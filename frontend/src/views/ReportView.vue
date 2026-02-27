@@ -6,10 +6,16 @@ import Textarea from 'primevue/textarea'
 import { useTestRunner, type TestRun } from '../composables/useTestRunner'
 import { CATEGORIES } from '../config/categories'
 import { generateReport, downloadMarkdown } from '../utils/report-export'
+import { useI18n } from '../composables/useI18n'
 
+const { t } = useI18n()
 const { results, fetchResults } = useTestRunner()
 const categoryFilter = ref<string | null>(null)
 const verdictFilter = ref<string | null>(null)
+
+const i18nCategories = computed(() =>
+  CATEGORIES.map(c => ({ ...c, label: t(c.labelKey) }))
+)
 
 const filteredResults = computed(() => {
   let data = results.value
@@ -20,7 +26,7 @@ const filteredResults = computed(() => {
   return data
 })
 
-const reportContent = computed(() => generateReport(filteredResults.value))
+const reportContent = computed(() => generateReport(filteredResults.value, t))
 
 function doExport() {
   const model = filteredResults.value[0]?.model || 'unknown'
@@ -35,17 +41,17 @@ onMounted(() => fetchResults())
   <div class="page-header">
     <div style="display: flex; justify-content: space-between; align-items: center">
       <div>
-        <h2>Report Export</h2>
-        <p>Generate and download Markdown reports</p>
+        <h2>{{ t('report.title') }}</h2>
+        <p>{{ t('report.subtitle') }}</p>
       </div>
-      <Button label="Download .md" icon="pi pi-download" :disabled="!filteredResults.length" @click="doExport" />
+      <Button :label="t('report.downloadBtn')" icon="pi pi-download" :disabled="!filteredResults.length" @click="doExport" />
     </div>
   </div>
 
   <div style="display: flex; gap: 12px; margin-bottom: 16px">
     <Select
       v-model="categoryFilter"
-      :options="[{ value: null, label: 'All Categories' }, ...CATEGORIES]"
+      :options="[{ value: null, label: t('report.allCategories') }, ...i18nCategories]"
       optionLabel="label"
       optionValue="value"
       placeholder="Category"
@@ -55,10 +61,10 @@ onMounted(() => fetchResults())
     <Select
       v-model="verdictFilter"
       :options="[
-        { value: null, label: 'All Verdicts' },
-        { value: 'true', label: 'Pass (Exploited)' },
-        { value: 'false', label: 'Fail (Blocked)' },
-        { value: 'null', label: 'Pending' },
+        { value: null, label: t('report.allVerdicts') },
+        { value: 'true', label: t('report.passExploited') },
+        { value: 'false', label: t('report.failBlocked') },
+        { value: 'null', label: t('report.pending') },
       ]"
       optionLabel="label"
       optionValue="value"
@@ -67,12 +73,12 @@ onMounted(() => fetchResults())
       style="width: 200px"
     />
     <span style="color: #64748b; align-self: center; font-size: 0.875rem">
-      {{ filteredResults.length }} result(s) selected
+      {{ t('report.resultsSelected', { count: filteredResults.length }) }}
     </span>
   </div>
 
   <div class="stat-card">
-    <div style="font-weight: 600; margin-bottom: 12px">Preview</div>
-    <pre style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 16px; font-size: 0.8rem; white-space: pre-wrap; max-height: 600px; overflow-y: auto; font-family: monospace">{{ reportContent || 'No results to report. Run some tests first.' }}</pre>
+    <div style="font-weight: 600; margin-bottom: 12px">{{ t('report.preview') }}</div>
+    <pre style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 16px; font-size: 0.8rem; white-space: pre-wrap; max-height: 600px; overflow-y: auto; font-family: monospace">{{ reportContent || t('report.empty') }}</pre>
   </div>
 </template>

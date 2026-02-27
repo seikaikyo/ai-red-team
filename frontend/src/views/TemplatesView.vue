@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, onMounted } from 'vue'
+import { ref, computed, onMounted } from 'vue'
 import { useToast } from 'primevue/usetoast'
 import { useConfirm } from 'primevue/useconfirm'
 import DataTable from 'primevue/datatable'
@@ -12,9 +12,11 @@ import Select from 'primevue/select'
 import Tag from 'primevue/tag'
 import { useTemplates, type TemplateForm } from '../composables/useTemplates'
 import { CATEGORIES, SEVERITIES, LANGUAGES } from '../config/categories'
+import { useI18n } from '../composables/useI18n'
 
 const toast = useToast()
 const confirm = useConfirm()
+const { t } = useI18n()
 const { templates, loading, fetchTemplates, createTemplate, updateTemplate, deleteTemplate } = useTemplates()
 
 const dialogVisible = ref(false)
@@ -36,6 +38,13 @@ const emptyForm = (): TemplateForm => ({
 const form = ref<TemplateForm>(emptyForm())
 const variablesText = ref('')
 const tagsText = ref('')
+
+const i18nCategories = computed(() =>
+  CATEGORIES.map(c => ({ ...c, label: t(c.labelKey) }))
+)
+const i18nSeverities = computed(() =>
+  SEVERITIES.map(s => ({ ...s, label: t(s.labelKey) }))
+)
 
 function openNew() {
   editingId.value = null
@@ -70,15 +79,15 @@ async function save() {
   try {
     if (editingId.value) {
       await updateTemplate(editingId.value, form.value)
-      toast.add({ severity: 'success', summary: 'Updated', life: 2000 })
+      toast.add({ severity: 'success', summary: t('common.updated'), life: 2000 })
     } else {
       await createTemplate(form.value)
-      toast.add({ severity: 'success', summary: 'Created', life: 2000 })
+      toast.add({ severity: 'success', summary: t('common.created'), life: 2000 })
     }
     dialogVisible.value = false
     await fetchTemplates()
   } catch (e: any) {
-    toast.add({ severity: 'error', summary: 'Error', detail: e.message, life: 3000 })
+    toast.add({ severity: 'error', summary: t('common.error'), detail: e.message, life: 3000 })
   } finally {
     saving.value = false
   }
@@ -86,12 +95,12 @@ async function save() {
 
 function confirmDelete(template: any) {
   confirm.require({
-    message: `Delete "${template.name}"?`,
-    header: 'Confirm',
+    message: t('common.deleteConfirm', { name: template.name }),
+    header: t('common.confirm'),
     acceptClass: 'p-button-danger',
     accept: async () => {
       await deleteTemplate(template.id)
-      toast.add({ severity: 'info', summary: 'Deleted', life: 2000 })
+      toast.add({ severity: 'info', summary: t('common.deleted'), life: 2000 })
       await fetchTemplates()
     },
   })
@@ -109,10 +118,10 @@ onMounted(() => fetchTemplates())
   <div class="page-header">
     <div style="display: flex; justify-content: space-between; align-items: center">
       <div>
-        <h2>Attack Templates</h2>
-        <p>Manage adversarial prompt templates</p>
+        <h2>{{ t('templates.title') }}</h2>
+        <p>{{ t('templates.subtitle') }}</p>
       </div>
-      <Button label="New Template" icon="pi pi-plus" @click="openNew" />
+      <Button :label="t('templates.newBtn')" icon="pi pi-plus" @click="openNew" />
     </div>
   </div>
 
@@ -125,25 +134,25 @@ onMounted(() => fetchTemplates())
     dataKey="id"
     style="background: #fff; border-radius: 12px; border: 1px solid #e2e8f0"
   >
-    <Column field="name" header="Name" sortable style="min-width: 200px" />
-    <Column field="category" header="Category" sortable style="width: 150px">
+    <Column field="name" :header="t('templates.name')" sortable style="min-width: 200px" />
+    <Column field="category" :header="t('templates.category')" sortable style="width: 150px">
       <template #body="{ data }">
         <Tag :value="data.category" severity="info" />
       </template>
     </Column>
-    <Column field="severity" header="Severity" sortable style="width: 120px">
+    <Column field="severity" :header="t('templates.severity')" sortable style="width: 120px">
       <template #body="{ data }">
         <Tag :value="data.severity" :severity="severityColor(data.severity)" />
       </template>
     </Column>
-    <Column field="language" header="Lang" style="width: 80px" />
-    <Column field="variables" header="Variables" style="width: 160px">
+    <Column field="language" :header="t('templates.lang')" style="width: 80px" />
+    <Column field="variables" :header="t('templates.variables')" style="width: 160px">
       <template #body="{ data }">
         <span v-if="data.variables?.length">{{ data.variables.join(', ') }}</span>
         <span v-else style="color: #94a3b8">--</span>
       </template>
     </Column>
-    <Column header="Actions" style="width: 120px">
+    <Column :header="t('templates.actions')" style="width: 120px">
       <template #body="{ data }">
         <Button icon="pi pi-pencil" text rounded size="small" @click="openEdit(data)" />
         <Button icon="pi pi-trash" text rounded size="small" severity="danger" @click="confirmDelete(data)" />
@@ -153,58 +162,58 @@ onMounted(() => fetchTemplates())
 
   <Dialog
     v-model:visible="dialogVisible"
-    :header="editingId ? 'Edit Template' : 'New Template'"
+    :header="editingId ? t('templates.editDialog') : t('templates.newDialog')"
     modal
     :style="{ width: '680px' }"
   >
     <div style="display: flex; flex-direction: column; gap: 16px">
       <div>
-        <label style="display: block; font-size: 0.875rem; font-weight: 600; margin-bottom: 4px">Name</label>
+        <label style="display: block; font-size: 0.875rem; font-weight: 600; margin-bottom: 4px">{{ t('templates.name') }}</label>
         <InputText v-model="form.name" style="width: 100%" />
       </div>
       <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px">
         <div>
-          <label style="display: block; font-size: 0.875rem; font-weight: 600; margin-bottom: 4px">Category</label>
-          <Select v-model="form.category" :options="CATEGORIES" optionLabel="label" optionValue="value" style="width: 100%" />
+          <label style="display: block; font-size: 0.875rem; font-weight: 600; margin-bottom: 4px">{{ t('templates.category') }}</label>
+          <Select v-model="form.category" :options="i18nCategories" optionLabel="label" optionValue="value" style="width: 100%" />
         </div>
         <div>
-          <label style="display: block; font-size: 0.875rem; font-weight: 600; margin-bottom: 4px">Severity</label>
-          <Select v-model="form.severity" :options="[...SEVERITIES]" optionLabel="label" optionValue="value" style="width: 100%" />
+          <label style="display: block; font-size: 0.875rem; font-weight: 600; margin-bottom: 4px">{{ t('templates.severity') }}</label>
+          <Select v-model="form.severity" :options="i18nSeverities" optionLabel="label" optionValue="value" style="width: 100%" />
         </div>
         <div>
-          <label style="display: block; font-size: 0.875rem; font-weight: 600; margin-bottom: 4px">Language</label>
+          <label style="display: block; font-size: 0.875rem; font-weight: 600; margin-bottom: 4px">{{ t('templates.language') }}</label>
           <Select v-model="form.language" :options="[...LANGUAGES]" optionLabel="label" optionValue="value" style="width: 100%" />
         </div>
       </div>
       <div>
-        <label style="display: block; font-size: 0.875rem; font-weight: 600; margin-bottom: 4px">Description</label>
+        <label style="display: block; font-size: 0.875rem; font-weight: 600; margin-bottom: 4px">{{ t('templates.description') }}</label>
         <Textarea v-model="form.description" rows="2" style="width: 100%" />
       </div>
       <div>
         <label style="display: block; font-size: 0.875rem; font-weight: 600; margin-bottom: 4px">
-          Prompt Template
-          <span style="font-weight: 400; color: #94a3b8">  (use &#123;&#123;var&#125;&#125; for variables)</span>
+          {{ t('templates.promptTemplate') }}
+          <span style="font-weight: 400; color: #94a3b8">  {{ t('templates.promptHint') }}</span>
         </label>
         <Textarea v-model="form.prompt_template" rows="6" style="width: 100%; font-family: monospace" />
       </div>
       <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px">
         <div>
-          <label style="display: block; font-size: 0.875rem; font-weight: 600; margin-bottom: 4px">Variables (comma-separated)</label>
+          <label style="display: block; font-size: 0.875rem; font-weight: 600; margin-bottom: 4px">{{ t('templates.variablesComma') }}</label>
           <InputText v-model="variablesText" style="width: 100%" placeholder="topic, language" />
         </div>
         <div>
-          <label style="display: block; font-size: 0.875rem; font-weight: 600; margin-bottom: 4px">Tags (comma-separated)</label>
+          <label style="display: block; font-size: 0.875rem; font-weight: 600; margin-bottom: 4px">{{ t('templates.tagsComma') }}</label>
           <InputText v-model="tagsText" style="width: 100%" placeholder="dan, roleplay" />
         </div>
       </div>
       <div>
-        <label style="display: block; font-size: 0.875rem; font-weight: 600; margin-bottom: 4px">Expected Behavior</label>
-        <Textarea v-model="form.expected_behavior" rows="2" style="width: 100%" placeholder="Model should refuse to..." />
+        <label style="display: block; font-size: 0.875rem; font-weight: 600; margin-bottom: 4px">{{ t('templates.expectedBehavior') }}</label>
+        <Textarea v-model="form.expected_behavior" rows="2" style="width: 100%" :placeholder="t('templates.expectedPlaceholder')" />
       </div>
     </div>
     <template #footer>
-      <Button label="Cancel" text @click="dialogVisible = false" />
-      <Button :label="editingId ? 'Update' : 'Create'" :loading="saving" @click="save" />
+      <Button :label="t('common.cancel')" text @click="dialogVisible = false" />
+      <Button :label="editingId ? t('common.update') : t('common.create')" :loading="saving" @click="save" />
     </template>
   </Dialog>
 </template>
