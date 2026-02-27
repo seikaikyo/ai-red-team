@@ -1,7 +1,7 @@
 ---
 title: AI Red Teaming Toolkit MVP
 type: feature
-status: in-progress
+status: completed
 created: 2026-02-27
 ---
 
