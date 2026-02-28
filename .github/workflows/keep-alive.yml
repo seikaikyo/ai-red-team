@@ -1,0 +1,16 @@
+name: Keep Alive
+
+on:
+  schedule:
+    # 每 14 分鐘 ping 一次，防止 Render free tier 休眠
+    - cron: "*/14 * * * *"
+  workflow_dispatch: # 手動觸發
+
+jobs:
+  ping:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Ping Render backend
+        run: |
+          curl -sf https://ai-red-team.onrender.com/api/stats \
+            -o /dev/null -w "status=%{http_code} time=%{time_total}s\n"
