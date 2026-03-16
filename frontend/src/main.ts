@@ -1,4 +1,5 @@
 import { createApp } from 'vue'
+import { inject } from '@vercel/analytics'
 import PrimeVue from 'primevue/config'
 import Aura from '@primeuix/themes/aura'
 import ToastService from 'primevue/toastservice'
@@ -25,3 +26,5 @@ app.use(router)
 app.directive('tooltip', Tooltip)
 
 app.mount('#app')
+
+inject()
