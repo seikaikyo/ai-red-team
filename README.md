@@ -93,10 +93,10 @@ uvicorn main:app --port 8005
 # Frontend
 cd frontend
 npm install
-npm run dev -- --port 5174
+npm run dev
 ```
 
-Open http://localhost:5174
+Open http://localhost:5175
 
 ### Project Structure
 
@@ -213,7 +213,7 @@ uvicorn main:app --port 8005
 # 前端
 cd frontend
 npm install
-npm run dev -- --port 5174
+npm run dev
 ```
 
 開啟 http://localhost:5174
@@ -296,10 +296,10 @@ uvicorn main:app --port 8005
 # Frontend
 cd frontend
 npm install
-npm run dev -- --port 5174
+npm run dev
 ```
 
-http://localhost:5174 を開く
+http://localhost:5175 を開く
 
 ---
 

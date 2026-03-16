@@ -15,7 +15,7 @@ class Settings(BaseSettings):
     # 應用程式 API Key（保護寫入/執行端點）
     app_api_key: str = ""
 
-    # 資料庫（預設 SQLite 本地開發）
+    # 資料庫（本地 SQLite，正式環境用 Neon PostgreSQL）
     database_url: str = "sqlite:///./red_team.db"
 
     # Anthropic API

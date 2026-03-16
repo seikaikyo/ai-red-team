@@ -1,5 +1,6 @@
 import { ref } from 'vue'
 import { API_BASE } from '../config/api'
+import { useApiKey } from './useApiKey'
 
 export interface AttackTemplate {
   id: string
@@ -31,6 +32,7 @@ export interface TemplateForm {
 export function useTemplates() {
   const templates = ref<AttackTemplate[]>([])
   const loading = ref(false)
+  const { authHeaders } = useApiKey()
 
   async function fetchTemplates(params?: { category?: string; severity?: string; language?: string; q?: string }) {
     loading.value = true
@@ -53,7 +55,7 @@ export function useTemplates() {
   async function createTemplate(form: TemplateForm) {
     const res = await fetch(`${API_BASE}/api/templates`, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: authHeaders(),
       body: JSON.stringify(form),
     })
     if (!res.ok) throw new Error(`HTTP ${res.status}`)
@@ -63,7 +65,7 @@ export function useTemplates() {
   async function updateTemplate(id: string, form: Partial<TemplateForm>) {
     const res = await fetch(`${API_BASE}/api/templates/${id}`, {
       method: 'PUT',
-      headers: { 'Content-Type': 'application/json' },
+      headers: authHeaders(),
       body: JSON.stringify(form),
     })
     if (!res.ok) throw new Error(`HTTP ${res.status}`)
@@ -71,7 +73,10 @@ export function useTemplates() {
   }
 
   async function deleteTemplate(id: string) {
-    await fetch(`${API_BASE}/api/templates/${id}`, { method: 'DELETE' })
+    await fetch(`${API_BASE}/api/templates/${id}`, {
+      method: 'DELETE',
+      headers: authHeaders(),
+    })
   }
 
   return { templates, loading, fetchTemplates, createTemplate, updateTemplate, deleteTemplate }

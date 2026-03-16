@@ -1,5 +1,6 @@
 import { ref } from 'vue'
 import { API_BASE } from '../config/api'
+import { useApiKey } from './useApiKey'
 
 export interface TestRun {
   id: string
@@ -29,13 +30,14 @@ export function useTestRunner() {
   const results = ref<TestRun[]>([])
   const running = ref(false)
   const loading = ref(false)
+  const { authHeaders } = useApiKey()
 
   async function runTest(req: RunRequest): Promise<TestRun> {
     running.value = true
     try {
       const res = await fetch(`${API_BASE}/api/tests/run`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: authHeaders(),
         body: JSON.stringify(req),
       })
       if (!res.ok) throw new Error(`HTTP ${res.status}`)
@@ -66,7 +68,7 @@ export function useTestRunner() {
   async function updateVerdict(id: string, success: boolean | null, notes: string = '') {
     const res = await fetch(`${API_BASE}/api/tests/${id}/verdict`, {
       method: 'PUT',
-      headers: { 'Content-Type': 'application/json' },
+      headers: authHeaders(),
       body: JSON.stringify({ success, notes }),
     })
     if (!res.ok) throw new Error(`HTTP ${res.status}`)

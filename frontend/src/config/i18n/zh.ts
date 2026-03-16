@@ -149,6 +149,14 @@ export default {
   'common.view': '檢視',
   'common.edit': '編輯',
 
+  // Settings
+  'settings.title': '設定',
+  'settings.apiKey': 'API Key',
+  'settings.apiKeyHint': '建立、編輯、刪除模板及執行測試需要 API Key。',
+  'settings.apiKeyPlaceholder': '輸入 API Key',
+  'settings.save': '儲存',
+  'settings.clear': '清除',
+
   // Categories
   'category.prompt_injection': '提示注入',
   'category.jailbreak': '越獄攻擊',

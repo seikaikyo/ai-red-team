@@ -84,6 +84,38 @@ body {
   flex: 1;
 }
 
+.sidebar-footer {
+  padding: 0 8px 4px;
+}
+
+.sidebar-settings-btn {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  padding: 10px 12px;
+  border-radius: var(--radius-md);
+  border: none;
+  background: transparent;
+  color: #cbd5e1;
+  font-size: 0.875rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 200ms, color 200ms;
+  text-align: left;
+}
+
+.sidebar-settings-btn:hover {
+  background: #334155;
+  color: #f1f5f9;
+}
+
+.api-key-indicator {
+  margin-left: auto;
+  color: #22c55e;
+  font-size: 0.75rem;
+}
+
 .sidebar-locale {
   display: flex;
   gap: 4px;
