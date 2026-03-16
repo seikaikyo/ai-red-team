@@ -149,6 +149,14 @@ export default {
   'common.view': '表示',
   'common.edit': '編集',
 
+  // Settings
+  'settings.title': '設定',
+  'settings.apiKey': 'API Key',
+  'settings.apiKeyHint': 'Template の作成・編集・削除および Test 実行に必要です。',
+  'settings.apiKeyPlaceholder': 'API Key を入力',
+  'settings.save': '保存',
+  'settings.clear': 'Clear',
+
   // Categories
   'category.prompt_injection': 'Prompt Injection',
   'category.jailbreak': 'Jailbreak',

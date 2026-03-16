@@ -149,6 +149,14 @@ export default {
   'common.view': 'View',
   'common.edit': 'Edit',
 
+  // Settings
+  'settings.title': 'Settings',
+  'settings.apiKey': 'API Key',
+  'settings.apiKeyHint': 'Required for creating, editing, deleting templates and running tests.',
+  'settings.apiKeyPlaceholder': 'Enter your API key',
+  'settings.save': 'Save',
+  'settings.clear': 'Clear',
+
   // Categories
   'category.prompt_injection': 'Prompt Injection',
   'category.jailbreak': 'Jailbreak',
