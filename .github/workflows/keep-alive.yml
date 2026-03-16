@@ -1,10 +1,11 @@
+# DEPRECATED: 已改用 UptimeRobot 免費方案 HEAD ping /health
+# 此 workflow 已停用，保留檔案供參考
+# 停用指令: gh workflow disable "Keep Alive"
 name: Keep Alive
 
 on:
-  schedule:
-    # 每 14 分鐘 ping 一次，防止 Render free tier 休眠
-    - cron: "*/14 * * * *"
-  workflow_dispatch: # 手動觸發
+  # schedule 已移除，改用 UptimeRobot
+  workflow_dispatch: # 保留手動觸發供測試
 
 jobs:
   ping:
@@ -12,5 +13,5 @@ jobs:
     steps:
       - name: Ping Render backend
         run: |
-          curl -sf https://ai-red-team.onrender.com/api/stats \
+          curl -sf https://ai-red-team.onrender.com/health \
             -o /dev/null -w "status=%{http_code} time=%{time_total}s\n"

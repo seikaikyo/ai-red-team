@@ -140,6 +140,14 @@ export default {
   'common.deleted': 'Deleted',
   'common.confirm': 'Confirm',
   'common.deleteConfirm': 'Delete "{{name}}"?',
+  'common.pageNotFound': 'Page not found',
+  'common.backToDashboard': 'Back to Dashboard',
+  'common.toggleMenu': 'Toggle menu',
+  'common.mainNav': 'Main navigation',
+  'common.pageNav': 'Page navigation',
+  'common.langSwitch': 'Language switch',
+  'common.view': 'View',
+  'common.edit': 'Edit',
 
   // Categories
   'category.prompt_injection': 'Prompt Injection',

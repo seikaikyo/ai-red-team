@@ -140,6 +140,14 @@ export default {
   'common.deleted': '削除しました',
   'common.confirm': '確認',
   'common.deleteConfirm': '「{{name}}」を削除しますか？',
+  'common.pageNotFound': 'Page が見つかりません',
+  'common.backToDashboard': 'Dashboard に戻る',
+  'common.toggleMenu': 'Menu 切替',
+  'common.mainNav': 'Main Navigation',
+  'common.pageNav': 'Page Navigation',
+  'common.langSwitch': '言語切替',
+  'common.view': '表示',
+  'common.edit': '編集',
 
   // Categories
   'category.prompt_injection': 'Prompt Injection',

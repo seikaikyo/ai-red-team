@@ -27,7 +27,6 @@ const lastResult = ref<TestRun | null>(null)
 const categoryFilter = ref<string | null>(null)
 const langFilter = ref<string | null>(null)
 
-// 自訂模型
 const useCustomModel = ref(false)
 const customProvider = ref<ProviderPreset>('ollama')
 const customBaseUrl = ref<string>(CUSTOM_PROVIDER_PRESETS[0].defaultUrl)
@@ -123,16 +122,17 @@ onMounted(() => loadTemplates())
     <p>{{ t('runner.subtitle') }}</p>
   </div>
 
-  <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 24px">
+  <div class="grid-2">
     <!-- Left: Config -->
-    <div style="display: flex; flex-direction: column; gap: 16px">
+    <div class="flex-col gap-16">
       <div class="stat-card">
-        <div style="font-weight: 600; margin-bottom: 12px">{{ t('runner.config') }}</div>
-        <div style="display: flex; flex-direction: column; gap: 12px">
-          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px">
+        <div class="card-title">{{ t('runner.config') }}</div>
+        <div class="flex-col gap-12">
+          <div class="grid-2" style="gap: 8px">
             <div>
-              <label style="display: block; font-size: 0.8rem; font-weight: 600; margin-bottom: 4px">{{ t('runner.categoryFilter') }}</label>
+              <label class="form-label" for="runner-category">{{ t('runner.categoryFilter') }}</label>
               <Select
+                id="runner-category"
                 v-model="categoryFilter"
                 :options="[{ value: null, label: t('runner.allCategories') }, ...i18nCategories]"
                 optionLabel="label"
@@ -142,8 +142,9 @@ onMounted(() => loadTemplates())
               />
             </div>
             <div>
-              <label style="display: block; font-size: 0.8rem; font-weight: 600; margin-bottom: 4px">{{ t('templates.lang') }}</label>
+              <label class="form-label" for="runner-lang">{{ t('templates.lang') }}</label>
               <Select
+                id="runner-lang"
                 v-model="langFilter"
                 :options="langOptions"
                 optionLabel="label"
@@ -153,8 +154,9 @@ onMounted(() => loadTemplates())
             </div>
           </div>
           <div>
-            <label style="display: block; font-size: 0.8rem; font-weight: 600; margin-bottom: 4px">{{ t('runner.template') }}</label>
+            <label class="form-label" for="runner-template">{{ t('runner.template') }}</label>
             <Select
+              id="runner-template"
               v-model="selectedTemplate"
               :options="filteredTemplates"
               optionLabel="name"
@@ -164,46 +166,46 @@ onMounted(() => loadTemplates())
             />
           </div>
           <div>
-            <label style="display: block; font-size: 0.8rem; font-weight: 600; margin-bottom: 4px">{{ t('runner.targetModel') }}</label>
-            <Select v-if="!useCustomModel" v-model="selectedModel" :options="[...MODELS]" optionLabel="label" optionValue="value" style="width: 100%" />
+            <label class="form-label" for="runner-model">{{ t('runner.targetModel') }}</label>
+            <Select v-if="!useCustomModel" id="runner-model" v-model="selectedModel" :options="[...MODELS]" optionLabel="label" optionValue="value" style="width: 100%" />
             <div style="display: flex; align-items: center; gap: 8px; margin-top: 8px">
-              <ToggleSwitch v-model="useCustomModel" />
-              <span style="font-size: 0.8rem; color: #64748b">{{ t('runner.useCustomModel') }}</span>
+              <ToggleSwitch v-model="useCustomModel" inputId="custom-toggle" />
+              <label for="custom-toggle" style="font-size: 0.8rem; color: var(--color-text-secondary); cursor: pointer">{{ t('runner.useCustomModel') }}</label>
             </div>
           </div>
-          <div v-if="useCustomModel" style="display: flex; flex-direction: column; gap: 10px; padding: 12px; background: #f8fafc; border-radius: 8px; border: 1px solid #e2e8f0">
+          <div v-if="useCustomModel" class="flex-col gap-12 custom-provider-box">
             <div>
-              <label style="display: block; font-size: 0.8rem; font-weight: 600; margin-bottom: 4px">{{ t('runner.provider') }}</label>
+              <label class="form-label">{{ t('runner.provider') }}</label>
               <SelectButton v-model="customProvider" :options="providerOptions" optionLabel="label" optionValue="value" :allowEmpty="false" style="width: 100%" />
             </div>
             <div>
-              <label style="display: block; font-size: 0.8rem; font-weight: 600; margin-bottom: 4px">{{ t('runner.baseUrl') }}</label>
-              <InputText v-model="customBaseUrl" style="width: 100%" placeholder="http://localhost:11434/v1" />
+              <label class="form-label" for="runner-baseurl">{{ t('runner.baseUrl') }}</label>
+              <InputText id="runner-baseurl" v-model="customBaseUrl" style="width: 100%" placeholder="http://localhost:11434/v1" />
             </div>
             <div>
-              <label style="display: block; font-size: 0.8rem; font-weight: 600; margin-bottom: 4px">{{ t('runner.modelName') }}</label>
-              <InputText v-model="customModelName" style="width: 100%" :placeholder="t('runner.modelNamePlaceholder')" />
+              <label class="form-label" for="runner-modelname">{{ t('runner.modelName') }}</label>
+              <InputText id="runner-modelname" v-model="customModelName" style="width: 100%" :placeholder="t('runner.modelNamePlaceholder')" />
             </div>
           </div>
-          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px">
+          <div class="grid-2" style="gap: 8px">
             <div>
-              <label style="display: block; font-size: 0.8rem; font-weight: 600; margin-bottom: 4px">{{ t('runner.maxTokens') }}</label>
-              <InputNumber v-model="maxTokens" :min="1" :max="4096" style="width: 100%" />
+              <label class="form-label" for="runner-tokens">{{ t('runner.maxTokens') }}</label>
+              <InputNumber id="runner-tokens" v-model="maxTokens" :min="1" :max="4096" style="width: 100%" />
             </div>
             <div>
-              <label style="display: block; font-size: 0.8rem; font-weight: 600; margin-bottom: 4px">{{ t('runner.temperature') }}</label>
-              <InputNumber v-model="temperature" :min="0" :max="1" :step="0.1" :minFractionDigits="1" style="width: 100%" />
+              <label class="form-label" for="runner-temp">{{ t('runner.temperature') }}</label>
+              <InputNumber id="runner-temp" v-model="temperature" :min="0" :max="1" :step="0.1" :minFractionDigits="1" style="width: 100%" />
             </div>
           </div>
         </div>
       </div>
 
       <div v-if="selectedTemplate && selectedTemplate.variables?.length" class="stat-card">
-        <div style="font-weight: 600; margin-bottom: 12px">{{ t('runner.variables') }}</div>
-        <div style="display: flex; flex-direction: column; gap: 8px">
+        <div class="card-title">{{ t('runner.variables') }}</div>
+        <div class="flex-col gap-8">
           <div v-for="v in selectedTemplate.variables" :key="v">
-            <label style="display: block; font-size: 0.8rem; font-weight: 600; margin-bottom: 4px" v-text="'{{' + v + '}}'"></label>
-            <InputText v-model="variables[v]" style="width: 100%" :placeholder="t('runner.enterVar', { var: v })" />
+            <label class="form-label" :for="`var-${v}`" v-text="'{{' + v + '}}'"></label>
+            <InputText :id="`var-${v}`" v-model="variables[v]" style="width: 100%" :placeholder="t('runner.enterVar', { var: v })" />
           </div>
         </div>
       </div>
@@ -216,24 +218,25 @@ onMounted(() => loadTemplates())
         @click="execute"
         style="width: 100%"
         severity="danger"
+        :aria-label="t('runner.executeBtn')"
       />
     </div>
 
     <!-- Right: Prompt + Response -->
-    <div style="display: flex; flex-direction: column; gap: 16px">
+    <div class="flex-col gap-16">
       <div class="stat-card" style="flex: 1">
-        <div style="font-weight: 600; margin-bottom: 8px">{{ t('runner.promptPreview') }}</div>
-        <div v-if="selectedTemplate" style="background: #f8fafc; border-radius: 8px; padding: 12px; font-family: monospace; font-size: 0.8rem; white-space: pre-wrap; max-height: 280px; overflow-y: auto; border: 1px solid #e2e8f0">{{ resolvedPrompt }}</div>
-        <div v-else style="color: #94a3b8; padding: 24px; text-align: center">{{ t('runner.selectToPreview') }}</div>
+        <div class="card-title" style="margin-bottom: 8px">{{ t('runner.promptPreview') }}</div>
+        <div v-if="selectedTemplate" class="code-block">{{ resolvedPrompt }}</div>
+        <div v-else class="empty-state">{{ t('runner.selectToPreview') }}</div>
       </div>
 
       <div class="stat-card" style="flex: 1">
         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px">
-          <span style="font-weight: 600">{{ t('runner.response') }}</span>
+          <span class="card-title" style="margin-bottom: 0">{{ t('runner.response') }}</span>
           <Tag v-if="lastResult" :value="`${lastResult.duration_ms}ms`" severity="info" />
         </div>
-        <div v-if="lastResult" style="background: #f8fafc; border-radius: 8px; padding: 12px; font-size: 0.85rem; white-space: pre-wrap; max-height: 320px; overflow-y: auto; border: 1px solid #e2e8f0">{{ lastResult.response }}</div>
-        <div v-else style="color: #94a3b8; padding: 24px; text-align: center">{{ t('runner.runToSee') }}</div>
+        <div v-if="lastResult" class="code-block-lg">{{ lastResult.response }}</div>
+        <div v-else class="empty-state">{{ t('runner.runToSee') }}</div>
       </div>
     </div>
   </div>

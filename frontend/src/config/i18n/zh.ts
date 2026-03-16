@@ -140,6 +140,14 @@ export default {
   'common.deleted': '已刪除',
   'common.confirm': '確認',
   'common.deleteConfirm': '確定刪除「{{name}}」？',
+  'common.pageNotFound': '找不到頁面',
+  'common.backToDashboard': '回到儀表板',
+  'common.toggleMenu': '切換選單',
+  'common.mainNav': '主要導覽',
+  'common.pageNav': '頁面導覽',
+  'common.langSwitch': '語言切換',
+  'common.view': '檢視',
+  'common.edit': '編輯',
 
   // Categories
   'category.prompt_injection': '提示注入',

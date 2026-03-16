@@ -1,7 +1,9 @@
 from datetime import datetime, timezone
+from enum import Enum
 from typing import Optional
 from uuid import uuid4
 
+from pydantic import field_validator
 from sqlalchemy import Column, JSON
 from sqlmodel import SQLModel, Field
 
@@ -14,19 +16,41 @@ def _uuid() -> str:
     return str(uuid4())
 
 
+class CategoryEnum(str, Enum):
+    prompt_injection = "prompt_injection"
+    jailbreak = "jailbreak"
+    bias = "bias"
+    safety_bypass = "safety_bypass"
+    multilingual = "multilingual"
+
+
+class SeverityEnum(str, Enum):
+    low = "low"
+    medium = "medium"
+    high = "high"
+    critical = "critical"
+
+
+class LanguageEnum(str, Enum):
+    en = "en"
+    zh = "zh"
+    ja = "ja"
+    mixed = "mixed"
+
+
 class AttackTemplate(SQLModel, table=True):
     __tablename__ = "attack_templates"
 
     id: str = Field(default_factory=_uuid, primary_key=True)
     name: str = Field(index=True)
-    category: str = Field(index=True)  # prompt_injection / jailbreak / bias / safety_bypass / multilingual
-    severity: str = Field(default="medium")  # low / medium / high / critical
+    category: str = Field(index=True)
+    severity: str = Field(default="medium")
     description: str = Field(default="")
-    prompt_template: str  # 支援 {{variable}} 語法
+    prompt_template: str
     variables: list[str] = Field(default_factory=list, sa_column=Column(JSON, default=[]))
     expected_behavior: str = Field(default="")
     tags: list[str] = Field(default_factory=list, sa_column=Column(JSON, default=[]))
-    language: str = Field(default="en")  # en / zh / mixed
+    language: str = Field(default="en")
     created_at: datetime = Field(default_factory=_utcnow)
     updated_at: datetime = Field(default_factory=_utcnow)
 
@@ -38,9 +62,9 @@ class TestRun(SQLModel, table=True):
     template_id: str = Field(index=True)
     template_name: str = Field(default="")
     model: str = Field(default="claude-sonnet-4-20250514")
-    prompt_sent: str  # 變數已替換的完整 prompt
+    prompt_sent: str
     response: str = Field(default="")
-    success: Optional[bool] = Field(default=None)  # None=pending, True=pass, False=fail
+    success: Optional[bool] = Field(default=None)
     notes: str = Field(default="")
     duration_ms: int = Field(default=0)
     category: str = Field(default="")
@@ -52,26 +76,26 @@ class TestRun(SQLModel, table=True):
 
 class TemplateCreate(SQLModel):
     name: str
-    category: str
-    severity: str = "medium"
+    category: CategoryEnum
+    severity: SeverityEnum = SeverityEnum.medium
     description: str = ""
     prompt_template: str
     variables: list[str] = []
     expected_behavior: str = ""
     tags: list[str] = []
-    language: str = "en"
+    language: LanguageEnum = LanguageEnum.en
 
 
 class TemplateUpdate(SQLModel):
     name: Optional[str] = None
-    category: Optional[str] = None
-    severity: Optional[str] = None
+    category: Optional[CategoryEnum] = None
+    severity: Optional[SeverityEnum] = None
     description: Optional[str] = None
     prompt_template: Optional[str] = None
     variables: Optional[list[str]] = None
     expected_behavior: Optional[str] = None
     tags: Optional[list[str]] = None
-    language: Optional[str] = None
+    language: Optional[LanguageEnum] = None
 
 
 class TestRunCreate(SQLModel):
@@ -81,6 +105,20 @@ class TestRunCreate(SQLModel):
     max_tokens: int = 1024
     temperature: float = 1.0
     base_url: str | None = None
+
+    @field_validator("max_tokens")
+    @classmethod
+    def validate_max_tokens(cls, v: int) -> int:
+        if not 1 <= v <= 8192:
+            raise ValueError("max_tokens must be between 1 and 8192")
+        return v
+
+    @field_validator("temperature")
+    @classmethod
+    def validate_temperature(cls, v: float) -> float:
+        if not 0 <= v <= 2:
+            raise ValueError("temperature must be between 0 and 2")
+        return v
 
 
 class TestRunUpdateVerdict(SQLModel):

@@ -128,7 +128,7 @@ onMounted(() => loadTemplates())
 
 <template>
   <div class="page-header">
-    <div style="display: flex; justify-content: space-between; align-items: center">
+    <div class="page-header-row">
       <div>
         <h2>{{ t('templates.title') }}</h2>
         <p>{{ t('templates.subtitle') }}</p>
@@ -141,6 +141,7 @@ onMounted(() => loadTemplates())
           optionValue="value"
           style="width: 160px"
           :placeholder="t('templates.lang')"
+          :aria-label="t('templates.lang')"
         />
         <Button :label="t('templates.newBtn')" icon="pi pi-plus" @click="openNew" />
       </div>
@@ -154,7 +155,8 @@ onMounted(() => loadTemplates())
     paginator
     :rows="20"
     dataKey="id"
-    style="background: #fff; border-radius: 12px; border: 1px solid #e2e8f0"
+    class="data-table-wrap"
+    :aria-label="t('templates.title')"
   >
     <Column field="name" :header="t('templates.name')" sortable style="min-width: 200px" />
     <Column field="category" :header="t('templates.category')" sortable style="width: 150px">
@@ -171,13 +173,13 @@ onMounted(() => loadTemplates())
     <Column field="variables" :header="t('templates.variables')" style="width: 160px">
       <template #body="{ data }">
         <span v-if="data.variables?.length">{{ data.variables.join(', ') }}</span>
-        <span v-else style="color: #94a3b8">--</span>
+        <span v-else style="color: var(--color-text-muted)">--</span>
       </template>
     </Column>
     <Column :header="t('templates.actions')" style="width: 120px">
       <template #body="{ data }">
-        <Button icon="pi pi-pencil" text rounded size="small" @click="openEdit(data)" />
-        <Button icon="pi pi-trash" text rounded size="small" severity="danger" @click="confirmDelete(data)" />
+        <Button icon="pi pi-pencil" text rounded size="small" @click="openEdit(data)" :aria-label="t('common.edit')" />
+        <Button icon="pi pi-trash" text rounded size="small" severity="danger" @click="confirmDelete(data)" :aria-label="t('common.delete')" />
       </template>
     </Column>
   </DataTable>
@@ -186,51 +188,51 @@ onMounted(() => loadTemplates())
     v-model:visible="dialogVisible"
     :header="editingId ? t('templates.editDialog') : t('templates.newDialog')"
     modal
-    :style="{ width: '680px' }"
+    :style="{ width: '680px', maxWidth: '95vw' }"
   >
-    <div style="display: flex; flex-direction: column; gap: 16px">
+    <div class="flex-col gap-16">
       <div>
-        <label style="display: block; font-size: 0.875rem; font-weight: 600; margin-bottom: 4px">{{ t('templates.name') }}</label>
-        <InputText v-model="form.name" style="width: 100%" />
+        <label class="form-label-lg" for="tmpl-name">{{ t('templates.name') }}</label>
+        <InputText id="tmpl-name" v-model="form.name" style="width: 100%" />
       </div>
-      <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px">
+      <div class="grid-3">
         <div>
-          <label style="display: block; font-size: 0.875rem; font-weight: 600; margin-bottom: 4px">{{ t('templates.category') }}</label>
-          <Select v-model="form.category" :options="i18nCategories" optionLabel="label" optionValue="value" style="width: 100%" />
+          <label class="form-label-lg" for="tmpl-cat">{{ t('templates.category') }}</label>
+          <Select id="tmpl-cat" v-model="form.category" :options="i18nCategories" optionLabel="label" optionValue="value" style="width: 100%" />
         </div>
         <div>
-          <label style="display: block; font-size: 0.875rem; font-weight: 600; margin-bottom: 4px">{{ t('templates.severity') }}</label>
-          <Select v-model="form.severity" :options="i18nSeverities" optionLabel="label" optionValue="value" style="width: 100%" />
+          <label class="form-label-lg" for="tmpl-sev">{{ t('templates.severity') }}</label>
+          <Select id="tmpl-sev" v-model="form.severity" :options="i18nSeverities" optionLabel="label" optionValue="value" style="width: 100%" />
         </div>
         <div>
-          <label style="display: block; font-size: 0.875rem; font-weight: 600; margin-bottom: 4px">{{ t('templates.language') }}</label>
-          <Select v-model="form.language" :options="[...LANGUAGES]" optionLabel="label" optionValue="value" style="width: 100%" />
+          <label class="form-label-lg" for="tmpl-lang">{{ t('templates.language') }}</label>
+          <Select id="tmpl-lang" v-model="form.language" :options="[...LANGUAGES]" optionLabel="label" optionValue="value" style="width: 100%" />
         </div>
       </div>
       <div>
-        <label style="display: block; font-size: 0.875rem; font-weight: 600; margin-bottom: 4px">{{ t('templates.description') }}</label>
-        <Textarea v-model="form.description" rows="2" style="width: 100%" />
+        <label class="form-label-lg" for="tmpl-desc">{{ t('templates.description') }}</label>
+        <Textarea id="tmpl-desc" v-model="form.description" rows="2" style="width: 100%" />
       </div>
       <div>
-        <label style="display: block; font-size: 0.875rem; font-weight: 600; margin-bottom: 4px">
+        <label class="form-label-lg" for="tmpl-prompt">
           {{ t('templates.promptTemplate') }}
-          <span style="font-weight: 400; color: #94a3b8">  {{ t('templates.promptHint') }}</span>
+          <span class="form-hint">  {{ t('templates.promptHint') }}</span>
         </label>
-        <Textarea v-model="form.prompt_template" rows="6" style="width: 100%; font-family: monospace" />
+        <Textarea id="tmpl-prompt" v-model="form.prompt_template" rows="6" style="width: 100%; font-family: monospace" />
       </div>
-      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px">
+      <div class="grid-2" style="gap: 12px">
         <div>
-          <label style="display: block; font-size: 0.875rem; font-weight: 600; margin-bottom: 4px">{{ t('templates.variablesComma') }}</label>
-          <InputText v-model="variablesText" style="width: 100%" placeholder="topic, language" />
+          <label class="form-label-lg" for="tmpl-vars">{{ t('templates.variablesComma') }}</label>
+          <InputText id="tmpl-vars" v-model="variablesText" style="width: 100%" placeholder="topic, language" />
         </div>
         <div>
-          <label style="display: block; font-size: 0.875rem; font-weight: 600; margin-bottom: 4px">{{ t('templates.tagsComma') }}</label>
-          <InputText v-model="tagsText" style="width: 100%" placeholder="dan, roleplay" />
+          <label class="form-label-lg" for="tmpl-tags">{{ t('templates.tagsComma') }}</label>
+          <InputText id="tmpl-tags" v-model="tagsText" style="width: 100%" placeholder="dan, roleplay" />
         </div>
       </div>
       <div>
-        <label style="display: block; font-size: 0.875rem; font-weight: 600; margin-bottom: 4px">{{ t('templates.expectedBehavior') }}</label>
-        <Textarea v-model="form.expected_behavior" rows="2" style="width: 100%" :placeholder="t('templates.expectedPlaceholder')" />
+        <label class="form-label-lg" for="tmpl-expected">{{ t('templates.expectedBehavior') }}</label>
+        <Textarea id="tmpl-expected" v-model="form.expected_behavior" rows="2" style="width: 100%" :placeholder="t('templates.expectedPlaceholder')" />
       </div>
     </div>
     <template #footer>

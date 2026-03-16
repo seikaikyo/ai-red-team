@@ -1,10 +1,19 @@
-from pydantic_settings import BaseSettings
 from functools import lru_cache
+
+from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
 class Settings(BaseSettings):
+    model_config = SettingsConfigDict(
+        env_file=".env",
+        env_file_encoding="utf-8",
+    )
+
     app_name: str = "AI Red Team Toolkit"
     debug: bool = False
+
+    # 應用程式 API Key（保護寫入/執行端點）
+    app_api_key: str = ""
 
     # 資料庫（預設 SQLite 本地開發）
     database_url: str = "sqlite:///./red_team.db"
@@ -22,9 +31,9 @@ class Settings(BaseSettings):
         "http://localhost:5175",
     ]
 
-    class Config:
-        env_file = ".env"
-        env_file_encoding = "utf-8"
+    # Rate Limiting
+    rate_limit: str = "30/minute"
+    rate_limit_test: str = "10/minute"
 
 
 @lru_cache

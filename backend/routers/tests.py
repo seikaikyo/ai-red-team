@@ -1,10 +1,20 @@
-from fastapi import APIRouter, Depends, HTTPException, Query
+import logging
+
+from fastapi import APIRouter, Depends, HTTPException, Query, Request
+from slowapi import Limiter
+from slowapi.util import get_remote_address
 from sqlmodel import Session, select
 
+from auth import require_api_key, validate_base_url
+from config import get_settings
 from database import get_session
 from models import AttackTemplate, TestRun, TestRunCreate, TestRunUpdateVerdict
 from services.runner import substitute_variables, execute_prompt
 
+logger = logging.getLogger(__name__)
+settings = get_settings()
+
+limiter = Limiter(key_func=get_remote_address)
 router = APIRouter(prefix="/api/tests", tags=["tests"])
 
 
@@ -31,10 +41,19 @@ def list_results(
 
 
 @router.post("/run")
-def run_single_test(body: TestRunCreate, session: Session = Depends(get_session)):
+@limiter.limit(settings.rate_limit_test)
+def run_single_test(
+    request: Request,
+    body: TestRunCreate,
+    session: Session = Depends(get_session),
+    _: str = Depends(require_api_key),
+):
     template = session.get(AttackTemplate, body.template_id)
     if not template:
-        raise HTTPException(status_code=404, detail="模板不存在")
+        raise HTTPException(status_code=404, detail="Template not found")
+
+    # SSRF 防護
+    validated_url = validate_base_url(body.base_url)
 
     prompt = substitute_variables(template.prompt_template, body.variables)
 
@@ -44,12 +63,13 @@ def run_single_test(body: TestRunCreate, session: Session = Depends(get_session)
             model=body.model,
             max_tokens=body.max_tokens,
             temperature=body.temperature,
-            base_url=body.base_url,
+            base_url=validated_url,
         )
     except ValueError as e:
         raise HTTPException(status_code=400, detail=str(e))
-    except Exception as e:
-        raise HTTPException(status_code=502, detail=f"API error: {str(e)}")
+    except Exception:
+        logger.exception("API call failed for model=%s", body.model)
+        raise HTTPException(status_code=502, detail="LLM API request failed")
 
     run = TestRun(
         template_id=template.id,
@@ -64,6 +84,8 @@ def run_single_test(body: TestRunCreate, session: Session = Depends(get_session)
     session.add(run)
     session.commit()
     session.refresh(run)
+
+    logger.info("Test executed: template=%s model=%s duration=%dms", template.name, body.model, duration_ms)
     return {"success": True, "data": run}
 
 
@@ -72,6 +94,7 @@ def update_verdict(
     run_id: str,
     body: TestRunUpdateVerdict,
     session: Session = Depends(get_session),
+    _: str = Depends(require_api_key),
 ):
     run = session.get(TestRun, run_id)
     if not run:

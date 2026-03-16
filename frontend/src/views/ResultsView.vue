@@ -71,15 +71,16 @@ onMounted(() => fetchResults())
     <p>{{ t('results.subtitle') }}</p>
   </div>
 
-  <div style="display: flex; gap: 12px; margin-bottom: 16px">
+  <div class="filter-bar">
     <Select
       v-model="categoryFilter"
       :options="[{ value: null, label: t('results.allCategories') }, ...i18nCategories]"
       optionLabel="label"
       optionValue="value"
-      placeholder="Category"
+      :placeholder="t('results.allCategories')"
       showClear
       style="width: 200px"
+      :aria-label="t('results.category')"
       @change="reload"
     />
     <Select
@@ -92,9 +93,10 @@ onMounted(() => fetchResults())
       ]"
       optionLabel="label"
       optionValue="value"
-      placeholder="Verdict"
+      :placeholder="t('results.allVerdicts')"
       showClear
       style="width: 200px"
+      :aria-label="t('results.verdict')"
       @change="reload"
     />
   </div>
@@ -106,12 +108,13 @@ onMounted(() => fetchResults())
     paginator
     :rows="20"
     dataKey="id"
-    style="background: #fff; border-radius: 12px; border: 1px solid #e2e8f0"
+    class="data-table-wrap"
+    :aria-label="t('results.title')"
   >
     <Column field="template_name" :header="t('results.template')" sortable style="min-width: 180px" />
     <Column field="model" :header="t('results.model')" sortable style="width: 180px">
       <template #body="{ data }">
-        <span style="font-size: 0.8rem">{{ data.model.replace('claude-', '').replace(/-\d+$/, '') }}</span>
+        <span class="model-text">{{ data.model.replace('claude-', '').replace(/-\d+$/, '') }}</span>
       </template>
     </Column>
     <Column field="category" :header="t('results.category')" style="width: 140px">
@@ -132,30 +135,32 @@ onMounted(() => fetchResults())
     </Column>
     <Column :header="t('results.actions')" style="width: 200px">
       <template #body="{ data }">
-        <Button icon="pi pi-eye" text rounded size="small" @click="showDetail(data)" v-tooltip="'View'" />
-        <Button icon="pi pi-check" text rounded size="small" severity="danger" @click="setVerdict(data, true)" v-tooltip="'Pass'" />
-        <Button icon="pi pi-times" text rounded size="small" severity="success" @click="setVerdict(data, false)" v-tooltip="'Fail'" />
-        <Button icon="pi pi-minus" text rounded size="small" severity="warn" @click="setVerdict(data, null)" v-tooltip="'Pending'" />
+        <div role="group" :aria-label="t('results.actions')">
+          <Button icon="pi pi-eye" text rounded size="small" @click="showDetail(data)" v-tooltip="t('common.view')" :aria-label="t('common.view')" />
+          <Button icon="pi pi-check" text rounded size="small" severity="danger" @click="setVerdict(data, true)" v-tooltip="t('results.passExploited')" :aria-label="t('results.passExploited')" />
+          <Button icon="pi pi-times" text rounded size="small" severity="success" @click="setVerdict(data, false)" v-tooltip="t('results.failBlocked')" :aria-label="t('results.failBlocked')" />
+          <Button icon="pi pi-minus" text rounded size="small" severity="warn" @click="setVerdict(data, null)" v-tooltip="t('results.pending')" :aria-label="t('results.pending')" />
+        </div>
       </template>
     </Column>
   </DataTable>
 
-  <Dialog v-model:visible="detailVisible" :header="t('results.detail')" modal :style="{ width: '800px' }">
+  <Dialog v-model:visible="detailVisible" :header="t('results.detail')" modal :style="{ width: '800px', maxWidth: '95vw' }">
     <template v-if="detailItem">
-      <div style="display: flex; gap: 8px; margin-bottom: 16px">
+      <div class="detail-tags">
         <Tag :value="detailItem.category" severity="info" />
         <Tag :value="detailItem.severity" />
         <Tag :value="verdictLabel(detailItem.success)" :severity="verdictSeverity(detailItem.success)" />
         <Tag :value="`${detailItem.duration_ms}ms`" severity="secondary" />
       </div>
-      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px">
+      <div class="detail-grid">
         <div>
-          <div style="font-weight: 600; margin-bottom: 8px">{{ t('results.promptSent') }}</div>
-          <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 12px; font-family: monospace; font-size: 0.8rem; white-space: pre-wrap; max-height: 400px; overflow-y: auto">{{ detailItem.prompt_sent }}</div>
+          <div class="detail-section-title">{{ t('results.promptSent') }}</div>
+          <div class="detail-content">{{ detailItem.prompt_sent }}</div>
         </div>
         <div>
-          <div style="font-weight: 600; margin-bottom: 8px">{{ t('results.response') }}</div>
-          <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 12px; font-size: 0.85rem; white-space: pre-wrap; max-height: 400px; overflow-y: auto">{{ detailItem.response }}</div>
+          <div class="detail-section-title">{{ t('results.response') }}</div>
+          <div class="detail-content-response">{{ detailItem.response }}</div>
         </div>
       </div>
     </template>

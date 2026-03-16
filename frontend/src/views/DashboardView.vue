@@ -22,10 +22,10 @@ function categoryLabel(key: string) {
     <p>{{ t('dashboard.subtitle') }}</p>
   </div>
 
-  <div v-if="loading" style="text-align: center; padding: 48px; color: #94a3b8">{{ t('dashboard.loading') }}</div>
+  <div v-if="loading" class="loading-state" role="status" aria-live="polite">{{ t('dashboard.loading') }}</div>
 
   <template v-else-if="stats">
-    <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 32px">
+    <div class="grid-4" role="region" :aria-label="t('dashboard.title')">
       <div class="stat-card">
         <div class="label">{{ t('dashboard.totalTests') }}</div>
         <div class="value">{{ stats.total_tests }}</div>
@@ -44,26 +44,32 @@ function categoryLabel(key: string) {
       </div>
     </div>
 
-    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 24px">
+    <div class="grid-2">
       <div class="stat-card">
-        <div class="label" style="margin-bottom: 16px">{{ t('dashboard.byCategory') }}</div>
-        <div v-for="(count, cat) in stats.category_distribution" :key="cat"
-          style="display: flex; justify-content: space-between; align-items: center; padding: 8px 0; border-bottom: 1px solid #f1f5f9">
+        <div class="card-title">{{ t('dashboard.byCategory') }}</div>
+        <div
+          v-for="(count, cat) in stats.category_distribution"
+          :key="cat"
+          class="distribution-row"
+        >
           <Tag :value="categoryLabel(String(cat))" severity="info" />
-          <span style="font-weight: 600">{{ count }}</span>
+          <span class="distribution-count">{{ count }}</span>
         </div>
-        <div v-if="Object.keys(stats.category_distribution).length === 0" style="color: #94a3b8; padding: 12px 0">
+        <div v-if="Object.keys(stats.category_distribution).length === 0" class="empty-state">
           {{ t('dashboard.noData') }}
         </div>
       </div>
       <div class="stat-card">
-        <div class="label" style="margin-bottom: 16px">{{ t('dashboard.bySeverity') }}</div>
-        <div v-for="(count, sev) in stats.severity_distribution" :key="sev"
-          style="display: flex; justify-content: space-between; align-items: center; padding: 8px 0; border-bottom: 1px solid #f1f5f9">
+        <div class="card-title">{{ t('dashboard.bySeverity') }}</div>
+        <div
+          v-for="(count, sev) in stats.severity_distribution"
+          :key="sev"
+          class="distribution-row"
+        >
           <span style="text-transform: capitalize">{{ t(`severity.${sev}`) }}</span>
-          <span style="font-weight: 600">{{ count }}</span>
+          <span class="distribution-count">{{ count }}</span>
         </div>
-        <div v-if="Object.keys(stats.severity_distribution).length === 0" style="color: #94a3b8; padding: 12px 0">
+        <div v-if="Object.keys(stats.severity_distribution).length === 0" class="empty-state">
           {{ t('dashboard.noData') }}
         </div>
       </div>
@@ -75,7 +81,7 @@ function categoryLabel(key: string) {
     </div>
   </template>
 
-  <div v-else style="text-align: center; padding: 48px; color: #94a3b8">
+  <div v-else class="empty-state" style="padding: 48px">
     {{ t('dashboard.empty') }}
   </div>
 </template>

@@ -38,7 +38,7 @@ onMounted(() => fetchResults())
 
 <template>
   <div class="page-header">
-    <div style="display: flex; justify-content: space-between; align-items: center">
+    <div class="page-header-row">
       <div>
         <h2>{{ t('report.title') }}</h2>
         <p>{{ t('report.subtitle') }}</p>
@@ -47,15 +47,16 @@ onMounted(() => fetchResults())
     </div>
   </div>
 
-  <div style="display: flex; gap: 12px; margin-bottom: 16px">
+  <div class="filter-bar">
     <Select
       v-model="categoryFilter"
       :options="[{ value: null, label: t('report.allCategories') }, ...i18nCategories]"
       optionLabel="label"
       optionValue="value"
-      placeholder="Category"
+      :placeholder="t('report.allCategories')"
       showClear
       style="width: 200px"
+      :aria-label="t('results.category')"
     />
     <Select
       v-model="verdictFilter"
@@ -67,17 +68,18 @@ onMounted(() => fetchResults())
       ]"
       optionLabel="label"
       optionValue="value"
-      placeholder="Verdict"
+      :placeholder="t('report.allVerdicts')"
       showClear
       style="width: 200px"
+      :aria-label="t('results.verdict')"
     />
-    <span style="color: #64748b; align-self: center; font-size: 0.875rem">
+    <span class="result-info">
       {{ t('report.resultsSelected', { count: filteredResults.length }) }}
     </span>
   </div>
 
   <div class="stat-card">
-    <div style="font-weight: 600; margin-bottom: 12px">{{ t('report.preview') }}</div>
-    <pre style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 16px; font-size: 0.8rem; white-space: pre-wrap; max-height: 600px; overflow-y: auto; font-family: monospace">{{ reportContent || t('report.empty') }}</pre>
+    <div class="card-title">{{ t('report.preview') }}</div>
+    <pre class="report-preview">{{ reportContent || t('report.empty') }}</pre>
   </div>
 </template>
