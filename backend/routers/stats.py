@@ -2,34 +2,29 @@ from fastapi import APIRouter, Depends
 from sqlmodel import Session, text
 
 from database import get_session
-from models import TestRun, AttackTemplate
 
 router = APIRouter(prefix="/api/stats", tags=["stats"])
 
-# 表名從 model metadata 取得
-_test_table = TestRun.__tablename__
-_tmpl_table = AttackTemplate.__tablename__
-
-_STATS_SQL = text(f"""
+_STATS_SQL = text("""
 SELECT
   COUNT(*) AS total,
   COUNT(*) FILTER (WHERE success = true) AS total_pass,
   COUNT(*) FILTER (WHERE success = false) AS total_fail,
   COUNT(*) FILTER (WHERE success IS NULL) AS total_pending,
-  (SELECT COUNT(*) FROM {_tmpl_table}) AS total_templates
-FROM {_test_table}
+  (SELECT COUNT(*) FROM attack_templates) AS total_templates
+FROM test_runs
 """)
 
-_CAT_SQL = text(f"""
+_CAT_SQL = text("""
 SELECT category, COUNT(*) AS cnt
-FROM {_test_table}
+FROM test_runs
 WHERE category IS NOT NULL
 GROUP BY category
 """)
 
-_SEV_SQL = text(f"""
+_SEV_SQL = text("""
 SELECT severity, COUNT(*) AS cnt
-FROM {_test_table}
+FROM test_runs
 WHERE severity IS NOT NULL
 GROUP BY severity
 """)

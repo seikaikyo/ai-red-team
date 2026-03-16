@@ -2,7 +2,6 @@ import logging
 
 from fastapi import APIRouter, Depends, HTTPException, Query, Request
 from slowapi import Limiter
-from slowapi.util import get_remote_address
 from sqlmodel import Session, select
 
 from auth import require_api_key, validate_base_url
@@ -14,7 +13,8 @@ from services.runner import substitute_variables, execute_prompt
 logger = logging.getLogger(__name__)
 settings = get_settings()
 
-limiter = Limiter(key_func=get_remote_address)
+from ratelimit import get_real_ip
+limiter = Limiter(key_func=get_real_ip)
 router = APIRouter(prefix="/api/tests", tags=["tests"])
 
 
