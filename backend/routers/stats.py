@@ -1,6 +1,7 @@
 from fastapi import APIRouter, Depends
 from sqlmodel import Session, text
 
+from auth import require_api_key
 from database import get_session
 
 router = APIRouter(prefix="/api/stats", tags=["stats"])
@@ -31,7 +32,7 @@ GROUP BY severity
 
 
 @router.get("")
-def get_stats(session: Session = Depends(get_session)):
+def get_stats(session: Session = Depends(get_session), _: str = Depends(require_api_key)):
     row = session.exec(_STATS_SQL).one()
     total, total_pass, total_fail, total_pending, total_templates = row
 

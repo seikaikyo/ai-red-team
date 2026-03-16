@@ -43,7 +43,7 @@ export function useTemplates() {
       if (params?.language) query.set('language', params.language)
       if (params?.q) query.set('q', params.q)
       const qs = query.toString()
-      const res = await fetch(`${API_BASE}/api/templates${qs ? '?' + qs : ''}`)
+      const res = await fetch(`${API_BASE}/api/templates${qs ? '?' + qs : ''}`, { headers: authHeaders() })
       if (!res.ok) throw new Error(`HTTP ${res.status}`)
       const json = await res.json()
       templates.value = json.data || []
