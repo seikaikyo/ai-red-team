@@ -1,5 +1,7 @@
+import hmac
 import ipaddress
 import re
+import socket
 from urllib.parse import urlparse
 
 from fastapi import Depends, HTTPException, Security
@@ -18,7 +20,7 @@ def require_api_key(
     if not settings.app_api_key:
         # 未設定 API Key 時跳過驗證（本機開發用）
         return "dev"
-    if not api_key or api_key != settings.app_api_key:
+    if not api_key or not hmac.compare_digest(api_key, settings.app_api_key):
         raise HTTPException(status_code=401, detail="Invalid or missing API key")
     return api_key
 
@@ -37,8 +39,16 @@ _BLOCKED_NETWORKS = [
 ]
 
 
+def _is_private_ip(ip: ipaddress.IPv4Address | ipaddress.IPv6Address) -> bool:
+    """檢查 IP 是否在封鎖的內網範圍內"""
+    for network in _BLOCKED_NETWORKS:
+        if ip in network:
+            return True
+    return False
+
+
 def validate_base_url(url: str | None) -> str | None:
-    """驗證 base_url 不指向內網，防止 SSRF"""
+    """驗證 base_url 不指向內網，防止 SSRF（含 DNS rebinding 防護）"""
     if not url:
         return None
 
@@ -51,21 +61,25 @@ def validate_base_url(url: str | None) -> str | None:
     if parsed.scheme not in ("http", "https"):
         raise HTTPException(status_code=400, detail="base_url must use http or https")
 
-    # 嘗試解析為 IP
+    # 禁止 localhost 變體
+    if re.match(r"^(localhost|.*\.local|.*\.internal)$", hostname, re.IGNORECASE):
+        raise HTTPException(
+            status_code=400,
+            detail="base_url cannot point to localhost or internal hosts",
+        )
+
+    # DNS 解析後驗證所有回傳的 IP（防止 DNS rebinding）
     try:
-        ip = ipaddress.ip_address(hostname)
-        for network in _BLOCKED_NETWORKS:
-            if ip in network:
-                raise HTTPException(
-                    status_code=400,
-                    detail="base_url cannot point to private/internal networks",
-                )
-    except ValueError:
-        # hostname 不是 IP，檢查是否為 localhost 變體
-        if re.match(r"^(localhost|.*\.local|.*\.internal)$", hostname, re.IGNORECASE):
+        addr_infos = socket.getaddrinfo(hostname, parsed.port or 443, proto=socket.IPPROTO_TCP)
+    except socket.gaierror:
+        raise HTTPException(status_code=400, detail="base_url hostname cannot be resolved")
+
+    for family, _, _, _, sockaddr in addr_infos:
+        ip = ipaddress.ip_address(sockaddr[0])
+        if _is_private_ip(ip):
             raise HTTPException(
                 status_code=400,
-                detail="base_url cannot point to localhost or internal hosts",
+                detail="base_url cannot point to private/internal networks",
             )
 
     return url
