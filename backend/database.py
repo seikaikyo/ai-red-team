@@ -25,6 +25,12 @@ def _build_engine(url: str):
     kwargs = {"echo": settings.debug}
     if _is_sqlite(url):
         kwargs["connect_args"] = {"check_same_thread": False}
+    else:
+        kwargs["pool_size"] = 5
+        kwargs["max_overflow"] = 5
+        kwargs["pool_timeout"] = 10
+        kwargs["pool_recycle"] = 300
+        kwargs["pool_pre_ping"] = True
     return create_engine(sync_url, **kwargs)
 
 
