@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { onMounted } from 'vue'
 import Tag from 'primevue/tag'
+import Skeleton from 'primevue/skeleton'
 import { useStats } from '../composables/useStats'
 import { CATEGORIES } from '../config/categories'
 import { useI18n } from '../composables/useI18n'
@@ -22,7 +23,24 @@ function categoryLabel(key: string) {
     <p>{{ t('dashboard.subtitle') }}</p>
   </div>
 
-  <div v-if="loading" class="loading-state" role="status" aria-live="polite">{{ t('dashboard.loading') }}</div>
+  <div v-if="loading" role="status" aria-live="polite">
+    <div class="grid-4">
+      <div v-for="i in 4" :key="i" class="stat-card">
+        <Skeleton width="60%" height="0.75rem" class="mb-2" />
+        <Skeleton width="40%" height="2rem" />
+      </div>
+    </div>
+    <div class="grid-2">
+      <div class="stat-card">
+        <Skeleton width="50%" height="1rem" class="mb-3" />
+        <Skeleton v-for="i in 3" :key="i" width="100%" height="2rem" class="mb-2" />
+      </div>
+      <div class="stat-card">
+        <Skeleton width="50%" height="1rem" class="mb-3" />
+        <Skeleton v-for="i in 3" :key="i" width="100%" height="2rem" class="mb-2" />
+      </div>
+    </div>
+  </div>
 
   <template v-else-if="stats">
     <div class="grid-4" role="region" :aria-label="t('dashboard.title')">

@@ -1,8 +1,11 @@
 import json
+import logging
 from pathlib import Path
 
 from sqlmodel import SQLModel, create_engine, Session
 from config import get_settings
+
+logger = logging.getLogger(__name__)
 
 settings = get_settings()
 
@@ -53,7 +56,7 @@ def _load_seed_data():
         for t in templates:
             session.add(AttackTemplate(**t))
         session.commit()
-        print(f"[Seed] 載入 {len(templates)} 個攻擊模板")
+        logger.info("Seed: loaded %d attack templates", len(templates))
 
 
 def get_session():

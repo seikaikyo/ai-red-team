@@ -20,6 +20,7 @@ export function useStats() {
     loading.value = true
     try {
       const res = await fetch(`${API_BASE}/api/stats`)
+      if (!res.ok) throw new Error(`HTTP ${res.status}`)
       const json = await res.json()
       stats.value = json.data
     } finally {

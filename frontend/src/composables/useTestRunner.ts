@@ -38,6 +38,7 @@ export function useTestRunner() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(req),
       })
+      if (!res.ok) throw new Error(`HTTP ${res.status}`)
       const json = await res.json()
       if (!json.success) throw new Error(json.error?.message || 'Test failed')
       return json.data as TestRun
@@ -54,6 +55,7 @@ export function useTestRunner() {
       if (params?.success) query.set('success', params.success)
       const qs = query.toString()
       const res = await fetch(`${API_BASE}/api/tests${qs ? '?' + qs : ''}`)
+      if (!res.ok) throw new Error(`HTTP ${res.status}`)
       const json = await res.json()
       results.value = json.data || []
     } finally {
@@ -67,6 +69,7 @@ export function useTestRunner() {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ success, notes }),
     })
+    if (!res.ok) throw new Error(`HTTP ${res.status}`)
     return (await res.json()).data as TestRun
   }
 
