@@ -2,14 +2,14 @@ import { ref, computed } from 'vue'
 
 const STORAGE_KEY = 'redteam_api_key'
 
-const apiKey = ref(localStorage.getItem(STORAGE_KEY) || '')
+const apiKey = ref(sessionStorage.getItem(STORAGE_KEY) || '')
 
 function setApiKey(key: string) {
   apiKey.value = key
   if (key) {
-    localStorage.setItem(STORAGE_KEY, key)
+    sessionStorage.setItem(STORAGE_KEY, key)
   } else {
-    localStorage.removeItem(STORAGE_KEY)
+    sessionStorage.removeItem(STORAGE_KEY)
   }
 }
 

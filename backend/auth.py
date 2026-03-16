@@ -12,14 +12,28 @@ from config import get_settings
 api_key_header = APIKeyHeader(name="X-API-Key", auto_error=False)
 
 
+def optional_api_key(
+    api_key: str | None = Security(api_key_header),
+) -> str | None:
+    """讀取端點可選認證 - 有 key 就驗證，無 key 回傳 None"""
+    settings = get_settings()
+    if not api_key:
+        return None
+    if settings.app_api_key and hmac.compare_digest(api_key, settings.app_api_key):
+        return api_key
+    return None
+
+
 def require_api_key(
     api_key: str | None = Security(api_key_header),
 ) -> str:
     """需要 API Key 才能存取的端點"""
     settings = get_settings()
     if not settings.app_api_key:
-        # 未設定 API Key 時跳過驗證（本機開發用）
-        return "dev"
+        if settings.database_url.startswith("sqlite"):
+            # 本機 SQLite 開發環境允許跳過驗證
+            return "dev"
+        raise HTTPException(status_code=503, detail="Server misconfigured: API key not set")
     if not api_key or not hmac.compare_digest(api_key, settings.app_api_key):
         raise HTTPException(status_code=401, detail="Invalid or missing API key")
     return api_key
@@ -74,6 +88,7 @@ def validate_base_url(url: str | None) -> str | None:
     except socket.gaierror:
         raise HTTPException(status_code=400, detail="base_url hostname cannot be resolved")
 
+    resolved_ip = None
     for family, _, _, _, sockaddr in addr_infos:
         ip = ipaddress.ip_address(sockaddr[0])
         if _is_private_ip(ip):
@@ -81,5 +96,16 @@ def validate_base_url(url: str | None) -> str | None:
                 status_code=400,
                 detail="base_url cannot point to private/internal networks",
             )
+        if resolved_ip is None:
+            resolved_ip = sockaddr[0]
+
+    # 回傳固定 IP 的 URL，防止 DNS rebinding（第二次解析指向不同 IP）
+    if resolved_ip:
+        port = parsed.port
+        pinned = f"{parsed.scheme}://{resolved_ip}"
+        if port:
+            pinned += f":{port}"
+        pinned += parsed.path
+        return pinned
 
     return url

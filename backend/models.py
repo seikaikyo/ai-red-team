@@ -82,13 +82,13 @@ class TestRun(SQLModel, table=True):
 # -- Pydantic schemas (request/response) --
 
 class TemplateCreate(SQLModel):
-    name: str
+    name: str = Field(max_length=200)
     category: CategoryEnum
     severity: SeverityEnum = SeverityEnum.medium
-    description: str = ""
-    prompt_template: str
+    description: str = Field(default="", max_length=2000)
+    prompt_template: str = Field(max_length=50000)
     variables: list[str] = []
-    expected_behavior: str = ""
+    expected_behavior: str = Field(default="", max_length=5000)
     tags: list[str] = []
     language: LanguageEnum = LanguageEnum.en
 
@@ -105,8 +105,13 @@ class TemplateUpdate(SQLModel):
     language: Optional[LanguageEnum] = None
 
 
+_ALLOWED_MODELS = {
+    "claude-sonnet-4-20250514",
+    "claude-haiku-4-5-20251001",
+}
+
 class TestRunCreate(SQLModel):
-    template_id: str
+    template_id: str = Field(max_length=36)
     model: str = "claude-sonnet-4-20250514"
     variables: dict[str, str] = {}
     max_tokens: int = 1024
@@ -125,6 +130,26 @@ class TestRunCreate(SQLModel):
     def validate_temperature(cls, v: float) -> float:
         if not 0 <= v <= 2:
             raise ValueError("temperature must be between 0 and 2")
+        return v
+
+    @field_validator("model")
+    @classmethod
+    def validate_model(cls, v: str) -> str:
+        # claude- 開頭走 Anthropic，其他走 OpenAI-compatible（自架 LLM）
+        if v.startswith("claude-") and v not in _ALLOWED_MODELS:
+            raise ValueError(f"Model not allowed. Choose from: {', '.join(sorted(_ALLOWED_MODELS))}")
+        if len(v) > 100:
+            raise ValueError("model name too long")
+        return v
+
+    @field_validator("variables")
+    @classmethod
+    def validate_variables(cls, v: dict[str, str]) -> dict[str, str]:
+        for key, val in v.items():
+            if len(key) > 100 or len(val) > 10000:
+                raise ValueError("variable key or value too long")
+        if len(v) > 50:
+            raise ValueError("too many variables")
         return v
 
 
