@@ -7,7 +7,16 @@ export type Locale = 'en' | 'zh' | 'ja'
 
 const messages: Record<Locale, Record<string, string>> = { en, zh, ja }
 
-const locale = ref<Locale>((localStorage.getItem('locale') as Locale) || 'en')
+function detectLocale(): Locale {
+  const saved = localStorage.getItem('locale') as Locale
+  if (saved && saved in messages) return saved
+  const lang = navigator.language.toLowerCase()
+  if (lang.startsWith('zh')) return 'zh'
+  if (lang.startsWith('ja')) return 'ja'
+  return 'en'
+}
+
+const locale = ref<Locale>(detectLocale())
 
 function setLocale(l: Locale) {
   locale.value = l
