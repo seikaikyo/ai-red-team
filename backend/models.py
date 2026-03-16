@@ -94,13 +94,13 @@ class TemplateCreate(SQLModel):
 
 
 class TemplateUpdate(SQLModel):
-    name: Optional[str] = None
+    name: Optional[str] = Field(default=None, max_length=200)
     category: Optional[CategoryEnum] = None
     severity: Optional[SeverityEnum] = None
-    description: Optional[str] = None
-    prompt_template: Optional[str] = None
+    description: Optional[str] = Field(default=None, max_length=2000)
+    prompt_template: Optional[str] = Field(default=None, max_length=50000)
     variables: Optional[list[str]] = None
-    expected_behavior: Optional[str] = None
+    expected_behavior: Optional[str] = Field(default=None, max_length=5000)
     tags: Optional[list[str]] = None
     language: Optional[LanguageEnum] = None
 
@@ -155,4 +155,4 @@ class TestRunCreate(SQLModel):
 
 class TestRunUpdateVerdict(SQLModel):
     success: Optional[bool] = None
-    notes: str = ""
+    notes: str = Field(default="", max_length=5000)
