@@ -22,6 +22,13 @@ class CategoryEnum(str, Enum):
     bias = "bias"
     safety_bypass = "safety_bypass"
     multilingual = "multilingual"
+    tool_use = "tool_use"
+    multi_turn = "multi_turn"
+    rag_poisoning = "rag_poisoning"
+    output_manipulation = "output_manipulation"
+    system_prompt_reconstruction = "system_prompt_reconstruction"
+    hallucination = "hallucination"
+    training_data_extraction = "training_data_extraction"
 
 
 class SeverityEnum(str, Enum):

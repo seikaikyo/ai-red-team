@@ -163,6 +163,13 @@ export default {
   'category.bias': '偏見檢測',
   'category.safety_bypass': '安全繞過',
   'category.multilingual': '多語言攻擊',
+  'category.tool_use': '工具呼叫注入',
+  'category.multi_turn': '多輪對話攻擊',
+  'category.rag_poisoning': 'RAG 污染',
+  'category.output_manipulation': '輸出格式操控',
+  'category.system_prompt_reconstruction': '系統提示詞重建',
+  'category.hallucination': '幻覺誘導',
+  'category.training_data_extraction': '訓練資料萃取',
 
   // Severities
   'severity.low': '低',

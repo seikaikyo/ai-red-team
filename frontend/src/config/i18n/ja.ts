@@ -163,6 +163,13 @@ export default {
   'category.bias': 'Bias検出',
   'category.safety_bypass': 'Safety Bypass',
   'category.multilingual': '多言語攻撃',
+  'category.tool_use': 'ツール呼び出し注入',
+  'category.multi_turn': 'マルチターン攻撃',
+  'category.rag_poisoning': 'RAGポイズニング',
+  'category.output_manipulation': '出力形式操作',
+  'category.system_prompt_reconstruction': 'システムプロンプト再構築',
+  'category.hallucination': 'ハルシネーション誘導',
+  'category.training_data_extraction': '訓練データ抽出',
 
   // Severities
   'severity.low': '低',

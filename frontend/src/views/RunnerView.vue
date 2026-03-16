@@ -19,7 +19,7 @@ const { templates, fetchTemplates } = useTemplates()
 const { running, runTest } = useTestRunner()
 
 const selectedTemplate = ref<AttackTemplate | null>(null)
-const selectedModel = ref(MODELS[0].value)
+const selectedModel = ref(MODELS[0]?.value ?? 'claude-sonnet-4-20250514')
 const maxTokens = ref(1024)
 const temperature = ref(1.0)
 const variables = ref<Record<string, string>>({})
