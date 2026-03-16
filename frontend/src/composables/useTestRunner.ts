@@ -56,7 +56,7 @@ export function useTestRunner() {
       if (params?.category) query.set('category', params.category)
       if (params?.success) query.set('success', params.success)
       const qs = query.toString()
-      const res = await fetch(`${API_BASE}/api/tests${qs ? '?' + qs : ''}`)
+      const res = await fetch(`${API_BASE}/api/tests${qs ? '?' + qs : ''}`, { headers: authHeaders() })
       if (!res.ok) throw new Error(`HTTP ${res.status}`)
       const json = await res.json()
       results.value = json.data || []
