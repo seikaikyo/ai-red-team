@@ -20,14 +20,12 @@ def get_stats(session: Session = Depends(get_session)):
         select(func.count(TestRun.id)).where(TestRun.success == None)  # noqa: E711
     ).one()
 
-    # 類別分布
     cat_rows = session.exec(
         select(TestRun.category, func.count(TestRun.id))
         .group_by(TestRun.category)
     ).all()
     category_distribution = {row[0]: row[1] for row in cat_rows if row[0]}
 
-    # 嚴重度分布
     sev_rows = session.exec(
         select(TestRun.severity, func.count(TestRun.id))
         .group_by(TestRun.severity)
