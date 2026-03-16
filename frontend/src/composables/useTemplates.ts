@@ -42,6 +42,7 @@ export function useTemplates() {
       if (params?.q) query.set('q', params.q)
       const qs = query.toString()
       const res = await fetch(`${API_BASE}/api/templates${qs ? '?' + qs : ''}`)
+      if (!res.ok) throw new Error(`HTTP ${res.status}`)
       const json = await res.json()
       templates.value = json.data || []
     } finally {
@@ -55,6 +56,7 @@ export function useTemplates() {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(form),
     })
+    if (!res.ok) throw new Error(`HTTP ${res.status}`)
     return (await res.json()).data as AttackTemplate
   }
 
@@ -64,6 +66,7 @@ export function useTemplates() {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(form),
     })
+    if (!res.ok) throw new Error(`HTTP ${res.status}`)
     return (await res.json()).data as AttackTemplate
   }
 

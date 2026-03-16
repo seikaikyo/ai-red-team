@@ -27,7 +27,10 @@ def _execute_anthropic(
     if not settings.anthropic_api_key:
         raise ValueError("ANTHROPIC_API_KEY 未設定")
 
-    client = anthropic.Anthropic(api_key=settings.anthropic_api_key)
+    client = anthropic.Anthropic(
+        api_key=settings.anthropic_api_key,
+        timeout=60.0,
+    )
 
     start = time.perf_counter()
     message = client.messages.create(
@@ -57,7 +60,7 @@ def _execute_openai_compatible(
     url = base_url or settings.custom_llm_base_url
     api_key = settings.custom_llm_api_key or settings.openai_api_key or "no-key"
 
-    client = openai.OpenAI(base_url=url, api_key=api_key)
+    client = openai.OpenAI(base_url=url, api_key=api_key, timeout=60.0)
 
     start = time.perf_counter()
     response = client.chat.completions.create(

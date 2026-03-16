@@ -37,6 +37,7 @@ app = FastAPI(
     lifespan=lifespan,
     docs_url="/docs" if settings.debug else None,
     redoc_url=None,
+    openapi_url="/openapi.json" if settings.debug else None,
 )
 
 app.state.limiter = limiter
