@@ -3,7 +3,7 @@
 # AI Red Team Toolkit
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
-[![Templates](https://img.shields.io/badge/Attack_Templates-96-red.svg)]()
+[![Templates](https://img.shields.io/badge/Attack_Templates-177-red.svg)]()
 [![Languages](https://img.shields.io/badge/Languages-EN_|_ZH_|_JA-blue.svg)]()
 [![Framework](https://img.shields.io/badge/Framework-Vue_3_+_FastAPI-green.svg)]()
 
@@ -34,7 +34,7 @@ This toolkit implements a structured taxonomy-based approach rather than ad-hoc 
 Define Scope → Select Category → Configure Variables → Execute → Classify → Report
 ```
 
-1. **Categorized attack vectors** — 5 categories with distinct threat models, not random prompt lists
+1. **Categorized attack vectors** — 12 categories with distinct threat models, not random prompt lists
 2. **Variable substitution** — Templates use `{{variable}}` placeholders, enabling systematic parameter sweeps across models and configurations
 3. **Trilingual coverage** — Each template exists in EN/ZH/JA to evaluate cross-language safety boundaries, where models often exhibit inconsistent guardrails
 4. **Structured verdicts** — Every test result is manually classified (Pass/Fail/Pending) with the original prompt and full model response preserved for reproducibility
@@ -50,7 +50,7 @@ Define Scope → Select Category → Configure Variables → Execute → Classif
 
 ### Features
 
-- **96 attack templates** across 5 categories (EN / ZH / JA)
+- **177 attack templates** across 12 categories (EN / ZH / JA)
 - **Test runner** with variable substitution and model configuration
 - **Result tracking** with manual verdict (Pass / Fail / Pending)
 - **Markdown report export** with per-category breakdown
@@ -112,7 +112,7 @@ ai-red-team/
     services/
       runner.py          # Anthropic API test runner
     seed/
-      templates.json     # 96 attack templates (EN/ZH/JA)
+      templates.json     # 177 attack templates (EN/ZH/JA)
   frontend/
     src/
       views/             # Dashboard, Templates, Runner, Results, Report
@@ -156,7 +156,7 @@ ai-red-team/
 定義範圍 → 選擇類別 → 設定變數 → 執行測試 → 判定結果 → 產出報告
 ```
 
-1. **分類攻擊向量** — 5 大類別各有獨立威脅模型，非隨機 prompt 清單
+1. **分類攻擊向量** — 12 大類別各有獨立威脅模型，非隨機 prompt 清單
 2. **變數替換** — 模板使用 `{{variable}}` 佔位符，可系統化掃描不同模型與設定
 3. **三語覆蓋** — 每個模板都有英/中/日版本，評估跨語言安全邊界（模型在不同語言的防護常不一致）
 4. **結構化判定** — 每筆測試手動分類（通過/攔截/待審），保留完整 prompt 與模型回應，確保可重現
@@ -172,7 +172,7 @@ ai-red-team/
 
 ### 功能
 
-- **96 個攻擊模板**，涵蓋 5 大類別（英文/中文/日文）
+- **177 個攻擊模板**，涵蓋 12 大類別（英文/中文/日文）
 - **測試執行器**，支援變數替換與模型參數設定
 - **結果追蹤**，手動判定（通過/攔截/待審查）
 - **Markdown 報告匯出**，依類別分項統計
@@ -216,7 +216,7 @@ npm install
 npm run dev
 ```
 
-開啟 http://localhost:5174
+開啟 http://localhost:5175
 
 ---
 
@@ -239,7 +239,7 @@ npm run dev
 スコープ定義 → カテゴリ選択 → 変数設定 → テスト実行 → 判定 → レポート出力
 ```
 
-1. **カテゴリ分類された攻撃ベクトル** — 5 カテゴリに独立した脅威モデル、ランダムなプロンプトリストではない
+1. **カテゴリ分類された攻撃ベクトル** — 12 カテゴリに独立した脅威モデル、ランダムなプロンプトリストではない
 2. **変数置換** — テンプレートは `{{variable}}` プレースホルダーを使用、モデルと設定を体系的にスイープ可能
 3. **3 言語カバレッジ** — 各テンプレートに英/中/日版があり、言語横断的な安全境界を評価（モデルは言語によってガードレールが不均一な場合が多い）
 4. **構造化された判定** — 各テスト結果を手動分類（Pass/Fail/未判定）、元のプロンプトとモデル応答を完全保持し再現性を確保
@@ -255,7 +255,7 @@ npm run dev
 
 ### 機能
 
-- **96 の攻撃テンプレート**、5 カテゴリ（英語/中国語/日本語）
+- **177 の攻撃テンプレート**、12 カテゴリ（英語/中国語/日本語）
 - **テストランナー** — 変数置換とモデル設定に対応
 - **結果追跡** — 手動判定（Pass / Fail / 未判定）
 - **Markdown レポート出力** — カテゴリ別の内訳
