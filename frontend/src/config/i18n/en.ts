@@ -163,6 +163,13 @@ export default {
   'category.bias': 'Bias Detection',
   'category.safety_bypass': 'Safety Bypass',
   'category.multilingual': 'Multilingual',
+  'category.tool_use': 'Tool Use Injection',
+  'category.multi_turn': 'Multi-turn Attack',
+  'category.rag_poisoning': 'RAG Poisoning',
+  'category.output_manipulation': 'Output Manipulation',
+  'category.system_prompt_reconstruction': 'System Prompt Recon',
+  'category.hallucination': 'Hallucination',
+  'category.training_data_extraction': 'Training Data Extract',
 
   // Severities
   'severity.low': 'Low',
