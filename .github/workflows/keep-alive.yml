@@ -13,5 +13,5 @@ jobs:
     steps:
       - name: Ping Render backend
         run: |
-          curl -sf https://ai-red-team.onrender.com/health \
+          curl -sf https://dashai-api.onrender.com/health \
             -o /dev/null -w "status=%{http_code} time=%{time_total}s\n"
