@@ -32,7 +32,7 @@ GROUP BY severity
 
 
 @router.get("")
-def get_stats(session: Session = Depends(get_session), _: str = Depends(require_api_key)):
+def get_stats(session: Session = Depends(get_session)):
     row = session.exec(_STATS_SQL).one()
     total, total_pass, total_fail, total_pending, total_templates = row
 

@@ -25,7 +25,6 @@ def list_results(
     page: int = Query(1, ge=1),
     limit: int = Query(50, ge=1, le=100),
     session: Session = Depends(get_session),
-    _: str = Depends(require_api_key),
 ):
     stmt = select(TestRun)
     if category:
