@@ -1,5 +1,6 @@
 import { createApp } from 'vue'
 import { inject } from '@vercel/analytics'
+import { injectSpeedInsights } from '@vercel/speed-insights'
 import PrimeVue from 'primevue/config'
 import Aura from '@primeuix/themes/aura'
 import ToastService from 'primevue/toastservice'
@@ -28,3 +29,4 @@ app.directive('tooltip', Tooltip)
 app.mount('#app')
 
 inject()
+injectSpeedInsights()
