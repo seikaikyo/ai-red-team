@@ -1,0 +1,10 @@
+{
+  "redirects": [
+    {
+      "source": "/:path*",
+      "has": [{ "type": "host", "value": "ai-red-team.dashai.dev" }],
+      "destination": "https://ai-red-team.seikai.dev/:path*",
+      "permanent": true
+    }
+  ]
+}
