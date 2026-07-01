@@ -9,7 +9,7 @@
 
 Systematic adversarial testing framework for evaluating LLM safety mechanisms.
 
-[Live Demo](https://ai-red-team.dashai.dev) | [English](#english) | [正體中文](#正體中文) | [日本語](#日本語)
+[Live Demo](https://ai-red-team.seikai.dev) | [English](#english) | [正體中文](#正體中文) | [日本語](#日本語)
 
 </div>
 
@@ -40,7 +40,7 @@ Define Scope → Select Category → Configure Variables → Execute → Classif
 4. **Structured verdicts** — Every test result is manually classified (Pass/Fail/Pending) with the original prompt and full model response preserved for reproducibility
 5. **Exportable reports** — Markdown reports with per-category breakdown for stakeholder communication
 
-> **Live Demo:** [https://ai-red-team.dashai.dev](https://ai-red-team.dashai.dev) (UI browsing only — API key not included, test execution disabled)
+> **Live Demo:** [https://ai-red-team.seikai.dev](https://ai-red-team.seikai.dev) (UI browsing only — API key not included, test execution disabled)
 
 ### Screenshots
 
@@ -178,7 +178,7 @@ ai-red-team/
 4. **結構化判定** — 每筆測試手動分類（通過/攔截/待審），保留完整 prompt 與模型回應，確保可重現
 5. **可匯出報告** — Markdown 格式，按類別分項統計
 
-> **線上展示：** [https://ai-red-team.dashai.dev](https://ai-red-team.dashai.dev)（僅供瀏覽 UI，未設定 API Key，無法執行測試）
+> **線上展示：** [https://ai-red-team.seikai.dev](https://ai-red-team.seikai.dev)（僅供瀏覽 UI，未設定 API Key，無法執行測試）
 
 ### 截圖
 
@@ -273,7 +273,7 @@ npm run dev
 4. **構造化された判定** — 各テスト結果を手動分類（Pass/Fail/未判定）、元のプロンプトとモデル応答を完全保持し再現性を確保
 5. **エクスポート可能なレポート** — カテゴリ別内訳付き Markdown レポート
 
-> **Live Demo:** [https://ai-red-team.dashai.dev](https://ai-red-team.dashai.dev)（UI 閲覧のみ。API Key 未設定のため、テスト実行は不可）
+> **Live Demo:** [https://ai-red-team.seikai.dev](https://ai-red-team.seikai.dev)（UI 閲覧のみ。API Key 未設定のため、テスト実行は不可）
 
 ### スクリーンショット
 
