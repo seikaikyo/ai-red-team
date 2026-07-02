@@ -11,7 +11,7 @@ import ToggleSwitch from 'primevue/toggleswitch'
 import Message from 'primevue/message'
 import { useTemplates, type AttackTemplate } from '../composables/useTemplates'
 import { useTestRunner, type TestRun } from '../composables/useTestRunner'
-import { MODELS, CATEGORIES, LANGUAGES, CUSTOM_PROVIDER_PRESETS, type ProviderPreset } from '../config/categories'
+import { MODELS, MODEL_GROUPS, CATEGORIES, LANGUAGES, CUSTOM_PROVIDER_PRESETS, type ProviderPreset } from '../config/categories'
 import { useI18n } from '../composables/useI18n'
 
 const toast = useToast()
@@ -21,6 +21,9 @@ const { running, runTest } = useTestRunner()
 
 const selectedTemplate = ref<AttackTemplate | null>(null)
 const selectedModel = ref(MODELS[0]?.value ?? 'claude-sonnet-5')
+const providerGroups = MODEL_GROUPS.map(g => ({ label: g.label, value: g.label.toLowerCase() }))
+const selectedProvider = ref(MODELS[0]?.provider ?? 'anthropic')
+const modelsForProvider = computed(() => MODELS.filter(m => m.provider === selectedProvider.value))
 const maxTokens = ref(1024)
 const temperature = ref(1.0)
 const variables = ref<Record<string, string>>({})
@@ -41,6 +44,11 @@ watch(customProvider, (val) => {
   if (preset && preset.defaultUrl) {
     customBaseUrl.value = preset.defaultUrl
   }
+})
+
+watch(selectedProvider, () => {
+  const first = modelsForProvider.value[0]
+  if (first) selectedModel.value = first.value
 })
 
 const i18nCategories = computed(() =>
@@ -171,7 +179,10 @@ onMounted(() => loadTemplates())
           </div>
           <div>
             <label class="form-label" for="runner-model">{{ t('runner.targetModel') }}</label>
-            <Select v-if="!useCustomModel" id="runner-model" v-model="selectedModel" :options="[...MODELS]" optionLabel="label" optionValue="value" style="width: 100%" />
+            <template v-if="!useCustomModel">
+              <SelectButton v-model="selectedProvider" :options="providerGroups" optionLabel="label" optionValue="value" :allowEmpty="false" style="width: 100%; flex-wrap: wrap" />
+              <SelectButton v-model="selectedModel" :options="modelsForProvider" optionLabel="label" optionValue="value" :allowEmpty="false" style="width: 100%; margin-top: 8px; flex-wrap: wrap" />
+            </template>
             <div style="display: flex; align-items: center; gap: 8px; margin-top: 8px">
               <ToggleSwitch v-model="useCustomModel" inputId="custom-toggle" />
               <label for="custom-toggle" style="font-size: 0.8rem; color: var(--color-text-secondary); cursor: pointer">{{ t('runner.useCustomModel') }}</label>
@@ -197,8 +208,11 @@ onMounted(() => loadTemplates())
               <InputNumber id="runner-tokens" v-model="maxTokens" :min="1" :max="4096" style="width: 100%" />
             </div>
             <div>
-              <label class="form-label" for="runner-temp">{{ t('runner.temperature') }}</label>
-              <InputNumber id="runner-temp" v-model="temperature" :min="0" :max="1" :step="0.1" :minFractionDigits="1" style="width: 100%" />
+              <label class="form-label" for="runner-temp">
+                {{ t('runner.temperature') }}
+                <i class="pi pi-info-circle" v-tooltip.top="t('runner.temperatureHelp')" style="margin-left: 4px; font-size: 0.75rem; color: var(--color-text-secondary); cursor: help"></i>
+              </label>
+              <InputNumber id="runner-temp" v-model="temperature" :min="0" :max="2" :step="0.1" :minFractionDigits="1" style="width: 100%" />
             </div>
           </div>
         </div>

@@ -55,6 +55,7 @@ export default {
   'runner.targetModel': '対象Model',
   'runner.maxTokens': '最大Token数',
   'runner.temperature': 'Temperature',
+  'runner.temperatureHelp': '出力のランダム性を制御(0〜2)。低いと安定・再現性が高く、高いと多様。境界の脆弱性を探るには高めで複数回実行。デフォルト 1.0。',
   'runner.variables': '変数',
   'runner.enterVar': '{{var}} を入力',
   'runner.executeBtn': 'Test実行',
