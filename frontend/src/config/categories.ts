@@ -31,10 +31,10 @@ export const MODEL_GROUPS = [
   {
     label: 'Anthropic',
     models: [
-      { value: 'claude-opus-4-8', label: 'Claude Opus 4.8' },
-      { value: 'claude-sonnet-5', label: 'Claude Sonnet 5' },
-      { value: 'claude-haiku-4-5-20251001', label: 'Claude Haiku 4.5' },
-      { value: 'claude-fable-5', label: 'Claude Fable 5' },
+      { value: 'claude-opus-4-8', label: 'Opus 4.8' },
+      { value: 'claude-sonnet-5', label: 'Sonnet 5' },
+      { value: 'claude-haiku-4-5-20251001', label: 'Haiku 4.5' },
+      { value: 'claude-fable-5', label: 'Fable 5' },
     ],
   },
   {
@@ -53,6 +53,12 @@ export const MODEL_GROUPS = [
     ],
   },
   {
+    label: 'xAI',
+    models: [
+      { value: 'grok-4.3', label: 'Grok 4.3' },
+    ],
+  },
+  {
     label: 'Meta',
     models: [
       { value: 'Llama-4-Maverick-17B-128E-Instruct-FP8', label: 'Llama 4 Maverick' },
@@ -62,15 +68,15 @@ export const MODEL_GROUPS = [
   {
     label: 'Mistral',
     models: [
-      { value: 'mistral-large-latest', label: 'Mistral Large 3' },
-      { value: 'mistral-small-latest', label: 'Mistral Small 4' },
+      { value: 'mistral-large-latest', label: 'Large 3' },
+      { value: 'mistral-small-latest', label: 'Small 4' },
     ],
   },
   {
     label: 'DeepSeek',
     models: [
-      { value: 'deepseek-v4-pro', label: 'DeepSeek V4 Pro' },
-      { value: 'deepseek-v4-flash', label: 'DeepSeek V4 Flash' },
+      { value: 'deepseek-v4-pro', label: 'V4 Pro' },
+      { value: 'deepseek-v4-flash', label: 'V4 Flash' },
     ],
   },
 ] as const
