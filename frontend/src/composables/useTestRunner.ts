@@ -40,7 +40,10 @@ export function useTestRunner() {
         headers: authHeaders(),
         body: JSON.stringify(req),
       })
-      if (!res.ok) throw new Error(`HTTP ${res.status}`)
+      if (!res.ok) {
+        const detail = await res.json().then((j) => j.detail || j.error?.message).catch(() => null)
+        throw new Error(detail || `HTTP ${res.status}`)
+      }
       const json = await res.json()
       if (!json.success) throw new Error(json.error?.message || 'Test failed')
       return json.data as TestRun
