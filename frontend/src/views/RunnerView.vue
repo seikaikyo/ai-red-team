@@ -8,6 +8,7 @@ import Button from 'primevue/button'
 import InputNumber from 'primevue/inputnumber'
 import Tag from 'primevue/tag'
 import ToggleSwitch from 'primevue/toggleswitch'
+import Message from 'primevue/message'
 import { useTemplates, type AttackTemplate } from '../composables/useTemplates'
 import { useTestRunner, type TestRun } from '../composables/useTestRunner'
 import { MODELS, CATEGORIES, LANGUAGES, CUSTOM_PROVIDER_PRESETS, type ProviderPreset } from '../config/categories'
@@ -24,6 +25,7 @@ const maxTokens = ref(1024)
 const temperature = ref(1.0)
 const variables = ref<Record<string, string>>({})
 const lastResult = ref<TestRun | null>(null)
+const isDemo = import.meta.env.VITE_DEMO_MODE === '1'
 const categoryFilter = ref<string | null>(null)
 const langFilter = ref<string | null>(null)
 
@@ -117,6 +119,8 @@ onMounted(() => loadTemplates())
 </script>
 
 <template>
+  <Message v-if="isDemo" severity="info" :closable="false">{{ t('runner.demoBanner') }}</Message>
+
   <div class="page-header">
     <h2>{{ t('runner.title') }}</h2>
     <p>{{ t('runner.subtitle') }}</p>
@@ -214,7 +218,7 @@ onMounted(() => loadTemplates())
         :label="t('runner.executeBtn')"
         icon="pi pi-play"
         :loading="running"
-        :disabled="!selectedTemplate"
+        :disabled="isDemo || !selectedTemplate"
         @click="execute"
         style="width: 100%"
         severity="danger"

@@ -46,6 +46,7 @@ export default {
   // Runner
   'runner.title': 'Test Runner',
   'runner.subtitle': 'Execute adversarial prompts against target models',
+  'runner.demoBanner': 'Live demo: test execution is disabled. Browse attack templates and past results only. Run the full toolkit locally with your own API key.',
   'runner.config': 'Configuration',
   'runner.categoryFilter': 'Category Filter',
   'runner.allCategories': 'All Categories',
