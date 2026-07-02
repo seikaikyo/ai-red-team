@@ -46,6 +46,7 @@ export default {
   // Runner
   'runner.title': '測試執行',
   'runner.subtitle': '對目標模型執行對抗性提示',
+  'runner.demoBanner': '線上 Demo:實際測試執行已停用,僅供瀏覽攻擊模板與歷史結果。完整功能請在本機部署並設定自己的 API Key。',
   'runner.config': '設定',
   'runner.categoryFilter': '類別篩選',
   'runner.allCategories': '所有類別',

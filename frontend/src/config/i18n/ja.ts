@@ -46,6 +46,7 @@ export default {
   // Runner
   'runner.title': 'Test Runner',
   'runner.subtitle': '対象Modelに敵対的Promptを実行',
+  'runner.demoBanner': 'ライブデモ:テスト実行は無効です。攻撃テンプレートと過去の結果の閲覧のみ可能です。フル機能はローカル環境に自分の API キーを設定してご利用ください。',
   'runner.config': '設定',
   'runner.categoryFilter': 'Category Filter',
   'runner.allCategories': '全Category',
