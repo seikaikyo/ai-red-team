@@ -55,6 +55,7 @@ export default {
   'runner.targetModel': '目標模型',
   'runner.maxTokens': '最大 Token 數',
   'runner.temperature': '溫度',
+  'runner.temperatureHelp': '控制回答的隨機性(0 到 2)。低溫穩定可複現,高溫發散多變;紅隊測試想找邊界破綻可調高多跑幾次。預設 1.0。',
   'runner.variables': '變數',
   'runner.enterVar': '輸入 {{var}}',
   'runner.executeBtn': '執行測試',

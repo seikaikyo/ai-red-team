@@ -55,6 +55,7 @@ export default {
   'runner.targetModel': 'Target Model',
   'runner.maxTokens': 'Max Tokens',
   'runner.temperature': 'Temperature',
+  'runner.temperatureHelp': 'Controls output randomness (0 to 2). Low is stable and reproducible; high is diverse. Raise it to probe edge-case failures across repeated runs. Default 1.0.',
   'runner.variables': 'Variables',
   'runner.enterVar': 'Enter {{var}}',
   'runner.executeBtn': 'Execute Test',
