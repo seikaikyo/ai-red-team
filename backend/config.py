@@ -15,6 +15,14 @@ class Settings(BaseSettings):
     # 應用程式 API Key（保護寫入/執行端點）
     app_api_key: str = ""
 
+    # 跳過 API Key 驗證。只給本機開發用，正式部署維持 False。
+    # 未設 app_api_key 且未開此旗標時，寫入/執行端點一律回 503。
+    allow_insecure_auth: bool = False
+
+    # 允許 base_url 指向私網與 loopback。自架 LLM（Ollama / vLLM /
+    # LM Studio）在本機開發時需要，正式部署維持 False 以防 SSRF。
+    allow_private_base_url: bool = False
+
     # 資料庫（本地 SQLite，正式環境用 Neon PostgreSQL）
     database_url: str = "sqlite:///./red_team.db"
 
