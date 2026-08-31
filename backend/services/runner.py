@@ -2,6 +2,7 @@ import re
 import time
 
 import anthropic
+import httpx
 import openai
 
 from config import get_settings
@@ -57,10 +58,22 @@ def _execute_openai_compatible(
     base_url: str | None = None,
 ) -> tuple[str, int]:
     """透過 OpenAI-compatible API 送出 prompt（Ollama / vLLM / LM Studio 等）"""
-    url = base_url or settings.custom_llm_base_url
-    api_key = settings.custom_llm_api_key or settings.openai_api_key or "no-key"
+    if base_url:
+        # 呼叫端指定的目標一律不附掛伺服器憑證，否則等於把伺服器金鑰
+        # 主動送到請求者指定的主機。自架 LLM 本來就不驗金鑰。
+        url = base_url
+        api_key = "no-key"
+    else:
+        url = settings.custom_llm_base_url
+        api_key = settings.custom_llm_api_key or settings.openai_api_key or "no-key"
 
-    client = openai.OpenAI(base_url=url, api_key=api_key, timeout=60.0)
+    # SDK 預設跟隨轉址，通過驗證的公網主機回 302 就能導向內網
+    client = openai.OpenAI(
+        base_url=url,
+        api_key=api_key,
+        timeout=60.0,
+        http_client=httpx.Client(follow_redirects=False, timeout=60.0),
+    )
 
     start = time.perf_counter()
     response = client.chat.completions.create(

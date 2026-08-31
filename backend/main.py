@@ -27,11 +27,15 @@ limiter = Limiter(key_func=get_real_ip, default_limits=[settings.rate_limit])
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     logger.info("Starting %s", settings.app_name)
-    if not settings.database_url.startswith("sqlite"):
-        if not settings.app_api_key:
+    if not settings.app_api_key:
+        if settings.allow_insecure_auth:
+            logger.warning("ALLOW_INSECURE_AUTH is on - write endpoints are UNAUTHENTICATED")
+        else:
             logger.warning("APP_API_KEY is not set - write endpoints will return 503")
-        if not settings.anthropic_api_key:
-            logger.warning("ANTHROPIC_API_KEY is not set - Claude tests will fail")
+    if not settings.anthropic_api_key:
+        logger.warning("ANTHROPIC_API_KEY is not set - Claude tests will fail")
+    if settings.allow_private_base_url:
+        logger.warning("ALLOW_PRIVATE_BASE_URL is on - SSRF protection is relaxed")
     init_db()
     yield
     logger.info("Shutting down %s", settings.app_name)

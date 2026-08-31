@@ -2,7 +2,7 @@
 
 # AI Red Team Toolkit
 
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+[![License: Proprietary](https://img.shields.io/badge/License-Proprietary-lightgrey.svg)](LICENSE)
 [![Templates](https://img.shields.io/badge/Attack_Templates-177-red.svg)]()
 [![Languages](https://img.shields.io/badge/Languages-EN_|_ZH_|_JA-blue.svg)]()
 [![Framework](https://img.shields.io/badge/Framework-Vue_3_+_FastAPI-green.svg)]()
@@ -345,4 +345,4 @@ http://localhost:5175 を開く
 
 ## License
 
-MIT
+Proprietary. See [LICENSE](LICENSE) - no license is granted to any party.

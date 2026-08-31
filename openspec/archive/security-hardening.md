@@ -1,8 +1,9 @@
 ---
 title: 安全強化 - Security Audit 修復
 type: fix
-status: in-progress
+status: done
 created: 2026-03-16
+closed: 2026-08-31
 ---
 
 # 安全強化 - Security Audit 修復
@@ -27,3 +28,11 @@ created: 2026-03-16
 1. curl 測試所有 API 端點認證
 2. 前端建構通過
 3. E2E 煙霧測試
+
+## 結案（2026-08-31）
+
+C-1 與 H-1 當時只做了部分收窄，2026-08-31 的複查發現三個殘留問題並已修完：
+認證旁路改為顯式開關（原本以資料庫種類推測環境）、SSRF 過濾器補上
+IPv4-mapped IPv6 與 CGNAT 兩個繞過口並關閉轉址跟隨、伺服器 LLM 金鑰不再
+跟隨呼叫端指定的網址。回歸測試見 `backend/tests/test_security_controls.py`。
+詳見 `openspec/changes/fix-security-audit-remediation.md`。
