@@ -15,6 +15,7 @@
     }
   ],
   "rewrites": [
+    { "source": "/api/backend/:alias/:path*", "destination": "/api/backend?alias=:alias&path=:path*" },
     { "source": "/((?!api/).*)", "destination": "/index.html" }
   ],
   "headers": [
