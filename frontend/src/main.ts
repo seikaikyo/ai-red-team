@@ -1,4 +1,5 @@
 import { createApp } from 'vue'
+import * as Sentry from '@sentry/vue'
 import { inject } from '@vercel/analytics'
 import { injectSpeedInsights } from '@vercel/speed-insights'
 import PrimeVue from 'primevue/config'
@@ -12,6 +13,19 @@ import router from './router'
 import './style.css'
 
 const app = createApp(App)
+const sentryDsn = import.meta.env.VITE_SENTRY_DSN
+if (sentryDsn) {
+  Sentry.init({
+    app,
+    dsn: sentryDsn,
+    environment: import.meta.env.MODE,
+    integrations: [Sentry.browserTracingIntegration({ router })],
+    tracesSampleRate: 0.2,
+    replaysSessionSampleRate: 0,
+    replaysOnErrorSampleRate: 0,
+    sendDefaultPii: false,
+  })
+}
 
 app.use(PrimeVue, {
   theme: {
