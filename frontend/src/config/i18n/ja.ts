@@ -172,6 +172,7 @@ export default {
   'category.system_prompt_reconstruction': 'システムプロンプト再構築',
   'category.hallucination': 'ハルシネーション誘導',
   'category.training_data_extraction': '訓練データ抽出',
+  'category.knowledge_boundary_escalation': '知識境界エスカレーション',
 
   // Severities
   'severity.low': '低',
