@@ -3,7 +3,7 @@
 # AI Red Team Toolkit
 
 [![License: Proprietary](https://img.shields.io/badge/License-Proprietary-lightgrey.svg)](LICENSE)
-[![Templates](https://img.shields.io/badge/Attack_Templates-177-red.svg)]()
+[![Templates](https://img.shields.io/badge/Attack_Templates-189-red.svg)]()
 [![Languages](https://img.shields.io/badge/Languages-EN_|_ZH_|_JA-blue.svg)]()
 [![Framework](https://img.shields.io/badge/Framework-Vue_3_+_FastAPI-green.svg)]()
 
@@ -34,7 +34,7 @@ This toolkit implements a structured taxonomy-based approach rather than ad-hoc 
 Define Scope → Select Category → Configure Variables → Execute → Classify → Report
 ```
 
-1. **Categorized attack vectors** — 12 categories with distinct threat models, not random prompt lists
+1. **Categorized attack vectors** — 13 categories with distinct threat models, not random prompt lists
 2. **Variable substitution** — Templates use `{{variable}}` placeholders, enabling systematic parameter sweeps across models and configurations
 3. **Trilingual coverage** — Each template exists in EN/ZH/JA (with some mixed-language vectors) to evaluate cross-language safety boundaries, where models often exhibit inconsistent guardrails
 4. **Structured verdicts** — Every test result is manually classified (Pass/Fail/Pending) with the original prompt and full model response preserved for reproducibility
@@ -50,7 +50,7 @@ Define Scope → Select Category → Configure Variables → Execute → Classif
 
 ### Features
 
-- **177 attack templates** across 12 categories (EN / ZH / JA, plus mixed-language vectors)
+- **189 attack templates** across 13 categories (EN / ZH / JA, plus mixed-language vectors)
 - **Test runner** with variable substitution and model configuration
 - **Result tracking** with manual verdict (Pass / Fail / Pending)
 - **Markdown report export** with per-category breakdown
@@ -59,7 +59,7 @@ Define Scope → Select Category → Configure Variables → Execute → Classif
 
 ### Attack Categories
 
-177 templates across 12 categories (counts include all language variants):
+189 templates across 13 categories (counts include all language variants):
 
 | Category | Templates | Threat Model |
 |----------|:---------:|-------------|
@@ -72,6 +72,7 @@ Define Scope → Select Category → Configure Variables → Execute → Classif
 | Multi-turn Attack | 12 | Progressive escalation across conversation turns |
 | RAG Poisoning | 12 | Malicious context injection into retrieval |
 | Hallucination | 12 | Forced fabrication, false-premise prompts |
+| Knowledge Boundary Escalation | 12 | Multi-turn: succeed in-domain, then push to long-tail edges (rare CJK, calendar transitions, romanization systems, Sanskrit transliteration) |
 | Output Manipulation | 9 | Format coercion, unsafe output shaping |
 | System Prompt Recon | 9 | System prompt reconstruction / leakage |
 | Training Data Extraction | 9 | Memorized data extraction probes |
@@ -128,7 +129,7 @@ ai-red-team/
     services/
       runner.py          # Anthropic + OpenAI-compatible test runner
     seed/
-      templates.json     # 177 attack templates (EN/ZH/JA)
+      templates.json     # 189 attack templates (EN/ZH/JA)
   frontend/
     src/
       views/             # Dashboard, Templates, Runner, Results, Report
@@ -172,7 +173,7 @@ ai-red-team/
 定義範圍 → 選擇類別 → 設定變數 → 執行測試 → 判定結果 → 產出報告
 ```
 
-1. **分類攻擊向量** — 12 大類別各有獨立威脅模型，非隨機 prompt 清單
+1. **分類攻擊向量** — 13 大類別各有獨立威脅模型，非隨機 prompt 清單
 2. **變數替換** — 模板使用 `{{variable}}` 佔位符，可系統化掃描不同模型與設定
 3. **三語覆蓋** — 每個模板都有英/中/日版本（含部分混合語言向量），評估跨語言安全邊界（模型在不同語言的防護常不一致）
 4. **結構化判定** — 每筆測試手動分類（通過/攔截/待審），保留完整 prompt 與模型回應，確保可重現
@@ -188,7 +189,7 @@ ai-red-team/
 
 ### 功能
 
-- **177 個攻擊模板**，涵蓋 12 大類別（英文/中文/日文，含部分混合語言向量）
+- **189 個攻擊模板**，涵蓋 13 大類別（英文/中文/日文，含部分混合語言向量）
 - **測試執行器**，支援變數替換與模型參數設定
 - **結果追蹤**，手動判定（通過/攔截/待審查）
 - **Markdown 報告匯出**，依類別分項統計
@@ -197,7 +198,7 @@ ai-red-team/
 
 ### 攻擊類別
 
-177 個模板分布於 12 大類別（數量含所有語言版本）：
+189 個模板分布於 13 大類別（數量含所有語言版本）：
 
 | 類別 | 模板數 | 威脅模型 |
 |------|:------:|---------|
@@ -210,6 +211,7 @@ ai-red-team/
 | 多輪攻擊 | 12 | 跨對話輪次的漸進式升級 |
 | RAG 汙染 | 12 | 向檢索內容注入惡意上下文 |
 | 幻覺誘導 | 12 | 強制捏造、錯誤前提誘導 |
+| 知識邊界漸進 | 12 | 多輪：先在領域核心答對，再推到長尾邊界（罕用漢字、紀年轉換期、多套拼音、梵漢音譯） |
 | 輸出操縱 | 9 | 格式脅迫、不安全輸出塑形 |
 | 系統提示詞重建 | 9 | 系統提示詞重建 / 洩漏 |
 | 訓練資料提取 | 9 | 記憶資料提取探測 |
@@ -267,7 +269,7 @@ npm run dev
 スコープ定義 → カテゴリ選択 → 変数設定 → テスト実行 → 判定 → レポート出力
 ```
 
-1. **カテゴリ分類された攻撃ベクトル** — 12 カテゴリに独立した脅威モデル、ランダムなプロンプトリストではない
+1. **カテゴリ分類された攻撃ベクトル** — 13 カテゴリに独立した脅威モデル、ランダムなプロンプトリストではない
 2. **変数置換** — テンプレートは `{{variable}}` プレースホルダーを使用、モデルと設定を体系的にスイープ可能
 3. **3 言語カバレッジ** — 各テンプレートに英/中/日版（一部は混合言語）があり、言語横断的な安全境界を評価（モデルは言語によってガードレールが不均一な場合が多い）
 4. **構造化された判定** — 各テスト結果を手動分類（Pass/Fail/未判定）、元のプロンプトとモデル応答を完全保持し再現性を確保
@@ -283,7 +285,7 @@ npm run dev
 
 ### 機能
 
-- **177 の攻撃テンプレート**、12 カテゴリ（英語/中国語/日本語、一部混合言語）
+- **189 の攻撃テンプレート**、13 カテゴリ（英語/中国語/日本語、一部混合言語）
 - **テストランナー** — 変数置換とモデル設定に対応
 - **結果追跡** — 手動判定（Pass / Fail / 未判定）
 - **Markdown レポート出力** — カテゴリ別の内訳
@@ -292,7 +294,7 @@ npm run dev
 
 ### 攻撃カテゴリ
 
-177 テンプレートを 12 カテゴリに分類（数値は全言語版を含む）：
+189 テンプレートを 13 カテゴリに分類（数値は全言語版を含む）：
 
 | カテゴリ | テンプレート数 | 脅威モデル |
 |---------|:------------:|-----------|
@@ -305,6 +307,7 @@ npm run dev
 | Multi-turn Attack | 12 | 会話ターンをまたぐ段階的エスカレーション |
 | RAG Poisoning | 12 | 検索コンテキストへの悪意ある注入 |
 | Hallucination | 12 | 強制的な捏造、誤った前提のプロンプト |
+| 知識境界エスカレーション | 12 | 多ターン：領域の中心で正答させた後、ロングテールの境界（希少漢字、紀年の移行期、複数のローマ字体系、梵漢音訳）へ誘導 |
 | Output Manipulation | 9 | フォーマット強制、安全でない出力整形 |
 | System Prompt Recon | 9 | システムプロンプトの再構成 / 漏洩 |
 | Training Data Extraction | 9 | 記憶データ抽出プローブ |

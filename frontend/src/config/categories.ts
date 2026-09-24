@@ -11,6 +11,7 @@ export const CATEGORIES = [
   { value: 'system_prompt_reconstruction', labelKey: 'category.system_prompt_reconstruction', label: 'System Prompt Recon', icon: 'pi pi-search', color: '#3f51b5' },
   { value: 'hallucination', labelKey: 'category.hallucination', label: 'Hallucination', icon: 'pi pi-exclamation-circle', color: '#ff9800' },
   { value: 'training_data_extraction', labelKey: 'category.training_data_extraction', label: 'Training Data Extract', icon: 'pi pi-download', color: '#f44336' },
+  { value: 'knowledge_boundary_escalation', labelKey: 'category.knowledge_boundary_escalation', label: 'Knowledge Boundary', icon: 'pi pi-sitemap', color: '#00897b' },
 ] as const
 
 export const SEVERITIES = [

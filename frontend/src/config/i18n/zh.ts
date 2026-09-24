@@ -172,6 +172,7 @@ export default {
   'category.system_prompt_reconstruction': '系統提示詞重建',
   'category.hallucination': '幻覺誘導',
   'category.training_data_extraction': '訓練資料萃取',
+  'category.knowledge_boundary_escalation': '知識邊界漸進',
 
   // Severities
   'severity.low': '低',

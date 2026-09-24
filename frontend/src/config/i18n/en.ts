@@ -172,6 +172,7 @@ export default {
   'category.system_prompt_reconstruction': 'System Prompt Recon',
   'category.hallucination': 'Hallucination',
   'category.training_data_extraction': 'Training Data Extract',
+  'category.knowledge_boundary_escalation': 'Knowledge Boundary Escalation',
 
   // Severities
   'severity.low': 'Low',
