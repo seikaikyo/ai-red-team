@@ -1,7 +1,7 @@
 ---
 title: 新增第 13 類 Knowledge Boundary Escalation
 type: feature
-status: approved
+status: completed
 created: 2026-04-19
 updated: 2026-09-24
 ---
@@ -50,7 +50,7 @@ updated: 2026-09-24
 2026-09-24 更新：後端已併入 dashai-api 的 `/redteam` 模組，原本列的 `backend/` 路徑不再使用。實際改動位置：
 
 - dashai-api `redteam/models.py`：`CategoryEnum` 新增 `knowledge_boundary_escalation`
-- dashai-api `redteam/seed/templates.json`：追加 12 筆（177 → 189）；範本原稿即本目錄的 `add-knowledge-boundary-category.templates.json`，正體中文與日文版的零散英文詞改成中日文
+- dashai-api `redteam/seed/templates.json`：追加 12 筆（177 → 189）；範本原稿即本目錄的 `add-knowledge-boundary-category.templates.json`（歸檔後同在 openspec/archive），正體中文與日文版的零散英文詞改成中日文
 - dashai-api `scripts/redteam_seed_add_category.py`：`load_redteam_seed()` 只在空表時載入，而範本可在前端刪除，不能在啟動時自動補回缺的列；新增這支手動補插腳本，以 (name, language) 判斷，只處理指定類別
 - dashai-api `redteam/tests/test_seed_templates.py`：seed 結構檢查
 - ai-red-team `frontend/src/config/categories.ts`、`frontend/src/config/i18n/{en,zh,ja}.ts`：第 13 類標籤
