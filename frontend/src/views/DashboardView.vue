@@ -6,7 +6,7 @@ import { useStats } from '../composables/useStats'
 import { CATEGORIES } from '../config/categories'
 import { useI18n } from '../composables/useI18n'
 
-const { stats, loading, fetchStats } = useStats()
+const { stats, loading, error, fetchStats } = useStats()
 const { t } = useI18n()
 
 onMounted(() => fetchStats())
@@ -40,6 +40,10 @@ function categoryLabel(key: string) {
         <Skeleton v-for="i in 3" :key="i" width="100%" height="2rem" class="mb-2" />
       </div>
     </div>
+  </div>
+
+  <div v-else-if="error" class="empty-state" role="alert" style="padding: 48px">
+    {{ t('common.loadFailed') }}
   </div>
 
   <template v-else-if="stats">

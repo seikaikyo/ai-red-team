@@ -119,7 +119,9 @@ function severityColor(severity: string) {
 
 function loadTemplates() {
   const lang = langFilter.value ?? locale.value
-  fetchTemplates({ language: lang })
+  fetchTemplates({ language: lang }).catch(() => {
+    toast.add({ severity: 'error', summary: t('common.error'), detail: t('common.loadFailed'), life: 5000 })
+  })
 }
 
 watch([locale, langFilter], () => loadTemplates())

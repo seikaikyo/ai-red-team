@@ -150,6 +150,7 @@ export default {
   'common.langSwitch': '言語切替',
   'common.view': '表示',
   'common.edit': '編集',
+  'common.loadFailed': 'データの読み込みに失敗しました。ページを再読み込みしてください。',
 
   // Settings
   'settings.title': '設定',
