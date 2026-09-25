@@ -150,6 +150,7 @@ export default {
   'common.langSwitch': 'Language switch',
   'common.view': 'View',
   'common.edit': 'Edit',
+  'common.loadFailed': 'Failed to load data. Please reload the page.',
 
   // Settings
   'settings.title': 'Settings',

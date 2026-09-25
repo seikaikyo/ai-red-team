@@ -150,6 +150,7 @@ export default {
   'common.langSwitch': '語言切換',
   'common.view': '檢視',
   'common.edit': '編輯',
+  'common.loadFailed': '資料載入失敗，請重新整理頁面。',
 
   // Settings
   'settings.title': '設定',
