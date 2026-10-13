@@ -14,6 +14,11 @@ export default [
         parser: tseslint.parser,
       },
     },
+    // Every <script> is lang="ts" and vue-tsc checks undefined names, the same reason
+    // typescript-eslint turns no-undef off for .ts files.
+    rules: {
+      'no-undef': 'off',
+    },
   },
   {
     rules: {
