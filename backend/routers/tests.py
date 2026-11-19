@@ -58,7 +58,7 @@ def run_single_test(
     prompt = substitute_variables(template.prompt_template, body.variables)
 
     try:
-        response_text, duration_ms = execute_prompt(
+        response_text, duration_ms, run_note = execute_prompt(
             prompt=prompt,
             model=body.model,
             max_tokens=body.max_tokens,
@@ -80,6 +80,7 @@ def run_single_test(
         duration_ms=duration_ms,
         category=template.category,
         severity=template.severity,
+        notes=run_note,
     )
     session.add(run)
     session.commit()
