@@ -68,7 +68,7 @@ class TestRun(SQLModel, table=True):
     id: str = Field(default_factory=_uuid, primary_key=True)
     template_id: str = Field(index=True)
     template_name: str = Field(default="")
-    model: str = Field(default="claude-sonnet-4-20250514")
+    model: str = Field(default="claude-sonnet-4-6")
     prompt_sent: str
     response: str = Field(default="")
     success: Optional[bool] = Field(default=None)
@@ -106,13 +106,13 @@ class TemplateUpdate(SQLModel):
 
 
 _ALLOWED_MODELS = {
-    "claude-sonnet-4-20250514",
+    "claude-sonnet-4-6",
     "claude-haiku-4-5-20251001",
 }
 
 class TestRunCreate(SQLModel):
     template_id: str = Field(max_length=36)
-    model: str = "claude-sonnet-4-20250514"
+    model: str = "claude-sonnet-4-6"
     variables: dict[str, str] = {}
     max_tokens: int = 1024
     temperature: float = 1.0

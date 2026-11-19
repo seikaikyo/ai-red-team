@@ -90,7 +90,7 @@ def _execute_openai_compatible(
 
 def execute_prompt(
     prompt: str,
-    model: str = "claude-sonnet-4-20250514",
+    model: str = "claude-sonnet-4-6",
     max_tokens: int = 1024,
     temperature: float = 1.0,
     base_url: str | None = None,
